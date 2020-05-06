@@ -151,6 +151,7 @@ function RegistroForm() {
         })
         const data = res;
         alert(data);
+        alert("Hola");
         if (data == 'false') {
             document.getElementById('alert-error-login').style.display = "block";
         } else {
