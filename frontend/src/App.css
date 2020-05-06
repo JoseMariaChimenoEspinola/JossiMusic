@@ -1,0 +1,392 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Allura&display=swap');
+/*************************** Body, contenedor y scrollbar ***************************/
+
+body {
+  margin: 0;
+}
+
+#root{
+    overflow-x: hidden;
+}
+
+*{
+  margin: 0px;
+  padding: 0px;
+}
+
+button{
+  font-family: 'Roboto', sans-serif;
+}
+
+.normalbuttons{
+  font-size: 1em !important;
+  margin-left: 10px;
+  outline: 0;
+}
+
+::-webkit-scrollbar{
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb{
+  background: linear-gradient(45deg,#0069a7,#79ff6c);
+  border-radius: 3px;
+}
+
+#wrapper{
+  width: 100%;
+  margin: auto;
+}
+
+/*************************** Menu Header ***************************/
+
+header{
+    position: fixed;
+    z-index: 99;
+    width: 100%;
+}
+
+.logo-menu{
+  width: 100px;
+  display: block;
+  margin: auto;
+}
+
+.logo-menu:hover{
+  cursor: pointer;
+}
+
+
+button.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit.MuiIconButton-edgeStart{
+  outline: 0;
+}
+
+button.MuiButtonBase-root.MuiButton-root.MuiButton-outlined.MuiButton-outlinedPrimary{
+  outline: 0;
+  margin-right: 10px;
+}
+
+button.MuiButtonBase-root.MuiButton-root.MuiButton-text.button-no-outlined.MuiButton-textPrimary{
+  outline: 0;
+}
+
+.button-login-container{
+  display: flex;
+}
+
+.button-login-container button{
+  margin-right: 10px;
+}
+
+.container-form-login{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.container-form-login button{
+  margin: 20px auto;
+  width: 66%;
+  outline: 0;
+}
+
+.cuestions-form-regis{
+    margin-top: 17px;
+    margin-bottom: -3px;
+}
+
+.date-input{
+    padding-left: 35px;
+    padding-top: 18px;
+    padding-bottom: 5px;
+}
+
+.button-regis-login p{
+  margin-top: 20px;
+}
+.button-regis-login button{
+  width: 100%;
+  margin-top: 5px;
+}
+
+.divider{
+  width: 100%;
+  margin: auto;
+  padding: 1px;
+  background-color: #DADCE0;
+}
+
+.MuiToolbar-root.MuiToolbar-regular.MuiToolbar-gutters{
+  display: flex;
+  justify-content: space-between;
+  background-color: white/*#1976d2*/;
+  color: black;
+}
+
+/*************************** Carousel ***************************/
+
+.title-slider-h3{
+  font-size: 4rem;
+}
+
+.background-slider-text{
+  background-color: rgba(0,0,0,0.5);
+  border-radius: 15px;
+}
+
+.background-slider-text h3{
+  font-size: 3rem;
+}
+
+.carousel-caption{
+  bottom: 300px;
+}
+
+.carousel.slide{
+  height: 77vh;
+  overflow: hidden;
+}
+
+.active.carousel-item{
+  height: 77vh;
+}
+
+.carousel.slide img{
+  object-fit: cover;
+  height: 77vh;
+  overflow: hidden;
+}
+
+/*************************** Content ***************************/
+
+.info-plataforma{
+  width: 50%;
+  margin: 20px auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.info-plataforma p{
+  font-weight: bold;
+}
+
+.border-info{
+  background-color: black;
+  padding: 40px 1px;
+}
+
+.conatiner-artists-home{
+  width: 60%;
+  margin: auto;
+  text-align: center;
+  padding: 20px;
+}
+
+.MuiAvatar-root.MuiAvatar-circle{
+  width: 200px;
+  height: 200px;
+  transition: 0.3s all;
+  opacity: 0.6;
+}
+
+.MuiAvatar-root.MuiAvatar-circle:hover{
+  opacity: 1;
+  cursor: pointer;
+}
+
+.avatars{
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.container-avatar-text{
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container-avatar-text h5{
+  margin-top: 8px;
+  font-weight: bold;
+}
+
+.conatiner-responsive-home{
+  width: 100%;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+}
+
+.conatiner-responsive-home div{
+  width: 50%;
+}
+.conatiner-responsive-home img{
+  width: 100%;
+}
+.conatiner-responsive-home h2{
+  text-align: center;
+  font-size: 4em;
+}
+.aling-text-elvis{
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    background-color: black;
+    color: white;
+    padding: 0px 57px;
+    align-items: center;
+}
+
+.aling-text-elvis h2{
+  font-size: 3em;
+  text-align: center;
+}
+
+.aling-text-elvis h3{
+  margin: 10px 0px;
+  font-family: 'Allura', cursive;
+  font-size: 3rem;
+  text-align: center;
+}
+
+.conatiner-loginregis-home{
+  width: 100%;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+  padding: 76px 0px 24px 76px;
+}
+
+.conatiner-loginregis-home h2{
+  font-size: 3rem;
+  text-align: center;
+}
+
+.conatiner-loginregis-home div{
+  width: 60%;
+  margin: auto;
+}
+
+.buttons-home-login{
+  width: 100%;
+}
+
+.button-login-container{
+  display: flex;
+  justify-content: space-around;
+}
+
+.button-login-container button{
+  width: 100%;
+  margin: 20px 0px;
+  font-size: 2em;
+}
+
+#alert-error-login{
+  display: none;
+  transition: 0.3s ease-in-out;
+}
+
+/*************************** Footer ***************************/
+footer{
+  width: 100%;
+  margin: auto;
+  border-top: 1px solid black;
+}
+
+.footer-container{
+  width: 80%;
+  margin: auto;
+  text-align: center;
+}
+
+.footer-container p{
+  margin-top: 13px;
+}
+
+/*************************** Mobile ***************************/
+@media only screen and (max-width: 767px) {
+
+/*Menu*/
+
+  .logo-menu{
+  width: 100px;
+  margin-left: 0px !important;
+  }
+  .mobile-display-register{
+  display: none !important;
+  }
+
+/*Carousel*/
+  .carousel img{
+    height: 35vh;
+  }
+  .carousel.slide img{
+    object-fit: cover;
+    height: 93vh !important;
+  }
+  .carousel.slide{
+  height: 93vh !important;
+  overflow: hidden;
+  margin-top: 0px !important;
+  }
+  .active.carousel-item{
+  height: 93vh !important;
+  }
+  .Caption-1{
+    bottom: 200px !important;
+  }
+  .Caption-2{
+    bottom: 281px !important;
+  }
+
+  .carousel-caption h3{
+    font-size: 3em;
+  }
+  /*content*/
+  .info-plataforma{
+    flex-direction: column;
+  }
+  .border-info{
+  padding: 1px 90px;
+  }
+  .conatiner-artists-home{
+    width: 100% !important;
+  }
+
+  .conatiner-responsive-home{
+    flex-direction: column;
+  }
+
+  .conatiner-responsive-home h2{
+    font-size: 2em;
+  }
+
+  .conatiner-responsive-home div{
+    width: 100%;
+  }
+
+}
+
+/*************************** Tablet ***************************/
+
+@media only screen and (max-width: 1024px) {
+  /* Artistas */
+  .avatars{
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}
