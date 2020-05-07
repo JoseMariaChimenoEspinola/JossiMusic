@@ -29,16 +29,15 @@ def index():
 
 # Api Calls
 
-@app.route('/api/login/<usuario>', methods=['GET'])
-def getUser(usuario):
-    
-    checkUser = db.find_one({'usuario': usuario})
+@app.route('/api/login/<usuario>/<password>', methods=['GET'])
+def getUser(usuario,password):
+    #sys.stderr.write(str(password))
+    checkUser = db.find_one({'usuario': usuario,'contra':password})
 
     return checkUser['usuario']
 
 @app.route('/api/register', methods=['POST'])
 def setNewUser():
-    ret = ''
     check = db.find_one({'usuario': request.json['usuario']})
 
     if(check == None):
@@ -49,13 +48,11 @@ def setNewUser():
             'contra': request.json['contra'],
             'genero': request.json['genero'],
         })
-        ret = 'true'
-        #mail.newUser(request.json['email'])
-    else:
-        ret = 'false'
+        mail.newUser(request.json['email'])
+
     sys.stderr.write('log mgs'+str(check))
     
-    return ret
+    return check['usuario']
 
 if __name__ == "__main__":
     app.run(debug=True)

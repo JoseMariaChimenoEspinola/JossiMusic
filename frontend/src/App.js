@@ -1,8 +1,8 @@
 import React, {useState,useEffect, Suspense} from 'react';
 import './App.css';
-import MenuHeader from './files/Menu.js';
-import ImageArtists from './files/avatars';
-import { ResponsiveFoto, Carousel, InfoSectionHome, ElvisFoto, LoginRegisHome} from './files/homeelements.js';
+import MenuHeader from './components/Menu.js';
+import ImageArtists from './components/avatars';
+import { ResponsiveFoto, Carousel, InfoSectionHome, ElvisFoto, LoginRegisHome} from './components/homeelements.js';
 /* Imagenes */
 
 class Home extends React.Component {

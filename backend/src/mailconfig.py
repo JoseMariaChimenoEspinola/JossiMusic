@@ -10,10 +10,9 @@ app.config['MAIL_PASSWORD'] = 'FERRARI1'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 
-Mail = Mail(app)
+mail = Mail(app)
 
 def newUser(email):
     msg = Message('Gracias por entrar en Jossic.', sender = "Josechu130@gmail.com", recipients = [email])
     msg.body = "Hola esto es una prueba de que te has registrado "
-    Mail.send(msg)
-    return 'Send'
+    mail.send(msg)

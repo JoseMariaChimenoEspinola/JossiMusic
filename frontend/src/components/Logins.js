@@ -51,12 +51,14 @@ function LoginForm() {
     const classes = useStyles();
 
     const [usuario, setUsuario] = useState('');
-    const [contra, setContra] = React.useState({
-        showPassword: false,
+    const [contra, setContra] = useState('');
+    const [show, setShow] = React.useState({
+        showPassword: false
     });
 
     async function checkUserApi(){
-        const res = await fetch('/api/login/' + usuario,{
+        console.log(contra)
+        const res = await fetch('/api/login/' + usuario +'/'+contra,{
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -73,10 +75,10 @@ function LoginForm() {
     }
 
     const handleClickShowPassword = () => {
-        setContra({ ...contra, showPassword: !contra.showPassword });
+        setShow({ ...show, showPassword: !show.showPassword });
     };
 
-    const handleMouseDownPassword = (event) => {
+    const handleMouseDownPassword = event => {
         event.preventDefault();
     };
 
@@ -96,9 +98,9 @@ function LoginForm() {
             <FormControl className={clsx(classes.margin, classes.textField)}>
                 <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
                 <Input
-                    id="standard-adornment-password"
-                    type={contra.showPassword ? 'text' : 'password'}
-                    value={contra.password}
+                    id="outlined-adornment-password"
+                    type={show.showPassword ? "text" : "password"}
+                    value={contra}
                     onChange={e => setContra(e.target.value)}
                     endAdornment={
                         <InputAdornment position="end">
@@ -106,8 +108,9 @@ function LoginForm() {
                                 aria-label="toggle password visibility"
                                 onClick={handleClickShowPassword}
                                 onMouseDown={handleMouseDownPassword}
+                                edge="end"
                             >
-                                {contra.showPassword ? <Visibility /> : <VisibilityOff />}
+                                {show.showPassword ? <Visibility /> : <VisibilityOff />}
                             </IconButton>
                         </InputAdornment>
                     }
@@ -149,10 +152,9 @@ function RegistroForm() {
                 genero,
             })
         })
-        const data = res;
+        const data = res['status'];
         alert(data);
-        alert("Hola");
-        if (data == 'false') {
+        if (data == 200) {
             document.getElementById('alert-error-login').style.display = "block";
         } else {
             document.getElementById('alert-error-login').style.display = "none";
