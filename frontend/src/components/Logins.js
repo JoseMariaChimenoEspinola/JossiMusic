@@ -1,4 +1,6 @@
 import React, {useState} from 'react';
+import { SetUserCookies } from '../cookies/cookies';
+
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
@@ -31,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(1),
         display: "flex",
         flexDirection: "column",
+        alignItems: "center",
     },
     withoutLabel: {
         marginTop: theme.spacing(3),
@@ -56,6 +59,7 @@ function LoginForm() {
         showPassword: false
     });
 
+
     async function checkUserApi(){
         console.log(contra)
         const res = await fetch('/api/login/' + usuario +'/'+contra,{
@@ -67,8 +71,11 @@ function LoginForm() {
         const data = res['status'];
         if (data == 500){
             document.getElementById('alert-error-login').style.display = "block";
+            
         }else{
             document.getElementById('alert-error-login').style.display = "none";
+            SetUserCookies(true);
+            window.location.reload(false);
         }
         
         console.log(data);
@@ -153,11 +160,12 @@ function RegistroForm() {
             })
         })
         const data = res['status'];
-        alert(data);
         if (data == 200) {
-            document.getElementById('alert-error-login').style.display = "block";
+            document.getElementById('alert-error-regis').style.display = "block";
+            document.getElementById('alert-newuser-regis').style.display = "none";
         } else {
-            document.getElementById('alert-error-login').style.display = "none";
+            document.getElementById('alert-newuser-regis').style.display = "block";
+            document.getElementById('alert-error-regis').style.display = "none";
         }
         console.log(data);
         
@@ -173,7 +181,7 @@ function RegistroForm() {
 
     return (
         <div className={classes.margin}>
-            <form onSubmit={RegistrarApi}>
+            <form onSubmit={RegistrarApi} className={classes.margin}>
             <Grid container spacing={1} alignItems="flex-end">
                 <Grid item>
                     <AccountCircle />
@@ -233,8 +241,11 @@ function RegistroForm() {
                 </Select>
             </FormControl>
             <Button type="submit" variant="contained" color="secondary" >Registrar</Button>
-                <div id="alert-error-login">
-                    <Alert severity="error">Este usuario ya existe, inicie sesion.</Alert>
+                <div id="alert-error-regis">
+                    <Alert severity="error">Esta cuenta ya existe</Alert>
+                </div>
+                <div id="alert-newuser-regis">
+                    <Alert severity="success">El registro se ha realizado correctamente</Alert>
                 </div>
             </form>
         </div>

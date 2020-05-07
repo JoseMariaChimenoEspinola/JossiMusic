@@ -295,9 +295,15 @@ button.MuiButtonBase-root.MuiButton-root.MuiButton-text.button-no-outlined.MuiBu
 
 #alert-error-login{
   display: none;
-  transition: 0.3s ease-in-out;
 }
 
+#alert-error-regis{
+  display: none;
+}
+
+#alert-newuser-regis{
+  display: none;
+}
 /*************************** Footer ***************************/
 footer{
   width: 100%;

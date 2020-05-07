@@ -1,9 +1,8 @@
 import React, {useState,useEffect, Suspense} from 'react';
 import './App.css';
-import MenuHeader from './components/Menu.js';
+import { MenuHeader, MenuHeaderLoginSearch} from './components/Menu.js';
 import ImageArtists from './components/avatars';
 import { ResponsiveFoto, Carousel, InfoSectionHome, ElvisFoto, LoginRegisHome} from './components/homeelements.js';
-/* Imagenes */
 
 class Home extends React.Component {
   render() {
@@ -39,4 +38,16 @@ class Home extends React.Component {
   }
 }
 
-export default Home;
+class HomeLogin extends React.Component{
+  
+  render(){
+    return(
+    <div id="wrapper">
+      <header>
+          <MenuHeaderLoginSearch />
+      </header>
+      </div>);
+  }
+}
+
+export {Home, HomeLogin};

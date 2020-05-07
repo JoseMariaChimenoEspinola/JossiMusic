@@ -38,7 +38,7 @@ def getUser(usuario,password):
 
 @app.route('/api/register', methods=['POST'])
 def setNewUser():
-    check = db.find_one({'usuario': request.json['usuario']})
+    check = db.find_one({'usuario': request.json['usuario'], 'email':request.json['email']})
 
     if(check == None):
         id = db.insert({
