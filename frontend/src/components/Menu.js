@@ -1,5 +1,5 @@
 import React from 'react';
-import { deleteCookie } from '../cookies/cookies';
+import { DeleteStateLogin } from '../localstorage/states';
 
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -14,8 +14,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import Button from '@material-ui/core/Button';
 
 import logo from '../img/logo.png';
 
@@ -108,6 +108,9 @@ const useStyles = makeStyles((theme) => ({
             display: 'none',
         },
     },
+    button: {
+        margin: theme.spacing(1),
+    },
 }));
 
 function MenuHeader(){
@@ -160,9 +163,9 @@ function MenuHeaderLoginSearch(params) {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-            <MenuItem onClick={deleteCookie}>Log Out</MenuItem>
+            <MenuItem onClick={handleMenuClose}>Perfil, {localStorage.getItem('usuario')}</MenuItem>
+            <MenuItem onClick={handleMenuClose}>Configuracion de cuenta</MenuItem>
+            <MenuItem onClick={DeleteStateLogin}>Cerrar sesión</MenuItem>
         </Menu>
     );
 
@@ -213,17 +216,17 @@ function MenuHeaderLoginSearch(params) {
                         />
                     </div>
                     <div className={classes.grow} />
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        className={classes.button}
+                        startIcon={<CloudUploadIcon />}
+                        onClick={() => { localStorage.setItem('state', 'upload'); window.location.reload(false);}}
+                    >
+                        Subir
+                    </Button>
                     <div className={classes.sectionDesktop}>
-                        {/* <IconButton aria-label="show 4 new mails" color="inherit">
-                            <Badge badgeContent={4} color="secondary">
-                                <MailIcon />
-                            </Badge>
-                        </IconButton>
-                        <IconButton aria-label="show 17 new notifications" color="inherit">
-                            <Badge badgeContent={17} color="secondary">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton> */}
+                        
                         <IconButton
                             edge="end"
                             aria-label="account of current user"
@@ -237,13 +240,14 @@ function MenuHeaderLoginSearch(params) {
                     </div>
                     <div className={classes.sectionMobile}>
                         <IconButton
-                            aria-label="show more"
-                            aria-controls={mobileMenuId}
+                            edge="end"
+                            aria-label="account of current user"
+                            aria-controls={menuId}
                             aria-haspopup="true"
-                            onClick={handleMobileMenuOpen}
+                            onClick={handleProfileMenuOpen}
                             color="inherit"
                         >
-                            <MoreIcon />
+                            <AccountCircle />
                         </IconButton>
                     </div>
                 </Toolbar>
@@ -280,7 +284,7 @@ function MenuOpciones(){
             <List>
                 <ListItem button>
                     <ListItemIcon><ArrowBackIosIcon onClick={toggleDrawer(anchor, false)}/></ListItemIcon>
-                    <ListItemText primary="Volver" />
+                    <img src={logo} className="logo-menu" /> 
                 </ListItem>
             </List>
             <Divider />

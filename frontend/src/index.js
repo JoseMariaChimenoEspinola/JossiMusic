@@ -2,15 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import {Home, HomeLogin} from './App';
-import { GetCookie } from './cookies/cookies';
+import FormUploader from './components/uploadfile';
+import { GetStateLogin } from './localstorage/states';
 
 function ShowHidePages(){
-  let check = GetCookie();
+  let check = GetStateLogin();
   
-  if(check == 'true'){
+  if (check == 'homelogin'){
     return <HomeLogin/>;
+  }else if(check == 'upload'){
+    return <FormUploader/>;
   }else{
-    return <Home/>;
+    return <Home />;
   }
 
   return <Home/>;

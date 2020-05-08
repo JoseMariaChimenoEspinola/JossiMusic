@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { SetUserCookies } from '../cookies/cookies';
+import { SetUserState } from '../localstorage/states';
 
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -74,7 +74,7 @@ function LoginForm() {
             
         }else{
             document.getElementById('alert-error-login').style.display = "none";
-            SetUserCookies(true);
+            SetUserState("homelogin", usuario);
             window.location.reload(false);
         }
         

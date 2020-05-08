@@ -46,7 +46,14 @@ class HomeLogin extends React.Component{
       <header>
           <MenuHeaderLoginSearch />
       </header>
+      
       </div>);
+  }
+}
+
+class ProfileUser extends React.Component{
+  render(){
+    return 0;
   }
 }
 

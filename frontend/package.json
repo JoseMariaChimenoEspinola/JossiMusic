@@ -15,9 +15,13 @@
     "aos": "^2.3.4",
     "bootstrap": "^4.4.1",
     "bootswatch": "^4.4.1",
+    "filepond": "^4.13.5",
+    "filepond-plugin-image-exif-orientation": "^1.0.8",
+    "filepond-plugin-image-preview": "^4.6.2",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.0",
     "react-dom": "^16.13.1",
+    "react-filepond": "^7.0.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
     "universal-cookie": "^4.0.3"
