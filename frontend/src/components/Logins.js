@@ -145,7 +145,7 @@ function RegistroForm() {
 
     async function RegistrarApi(e) {
         e.preventDefault();
-        console.log(usuario, email, fecha, contra, genero);
+        
         const res = await fetch('/api/register', {
             method: 'POST',
             headers: {
@@ -157,6 +157,7 @@ function RegistroForm() {
                 fecha,
                 contra,
                 genero,
+
             })
         })
         const data = res['status'];

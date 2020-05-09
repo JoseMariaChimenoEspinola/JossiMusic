@@ -4,6 +4,7 @@ with open (activate_this_file) as _file:
     exec(_file.read(), dict(__file__=activate_this_file))
 
 import sys
+import time
 from flask import Flask, jsonify, request
 from flask_pymongo import PyMongo, ObjectId
 from flask_cors import CORS
@@ -19,6 +20,7 @@ mongo = PyMongo(app)
 CORS(app)
 
 db = mongo.db.users
+dbfiles = mongo.db.songs
 
 #WebPages
 @app.route('/')
@@ -28,7 +30,7 @@ def index():
 
 
 # Api Calls
-
+## User Calls
 @app.route('/api/login/<usuario>/<password>', methods=['GET'])
 def getUser(usuario,password):
     #sys.stderr.write(str(password))
@@ -53,6 +55,24 @@ def setNewUser():
     sys.stderr.write('log mgs'+str(check))
     
     return check['usuario']
+
+
+# Upload songs and files
+
+@app.route('/api/uploadsong', methods=['POST'])
+def uploadSong():
+    sys.stderr.write('Fecha de hoy: '+str(time.strftime("%d/%m/%y")))
+    id = dbfiles.insert({
+        'titulo': request.json['titulo'],
+        'descripcion': request.json['descripcion'],
+        'artista': request.json['artista'],
+        'genero': request.json['genero'],
+        'dircancion': request.json['song'],
+        'dircaratula': request.json['photo'],
+        'fecha': time.strftime("%d/%m/%y"),
+    })
+    
+    return id;
 
 if __name__ == "__main__":
     app.run(debug=True)

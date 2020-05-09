@@ -19,6 +19,9 @@ button{
   font-family: 'Roboto', sans-serif;
 }
 
+button:focus {outline:0;}
+
+
 .normalbuttons{
   font-size: 1em !important;
   margin-left: 10px;
@@ -58,22 +61,10 @@ header{
 }
 
 
-button.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit.MuiIconButton-edgeStart{
-  outline: 0;
-}
-
-button.MuiButtonBase-root.MuiButton-root.MuiButton-outlined.MuiButton-outlinedPrimary{
-  outline: 0;
-  margin-right: 10px;
-}
-
-button.MuiButtonBase-root.MuiButton-root.MuiButton-text.button-no-outlined.MuiButton-textPrimary{
-  outline: 0;
-}
-
 .button-login-container{
   display: flex;
 }
+
 
 .button-login-container button{
   margin-right: 10px;
