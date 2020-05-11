@@ -67,12 +67,12 @@ def uploadSong():
         'descripcion': request.json['descripcion'],
         'artista': request.json['artista'],
         'genero': request.json['genero'],
-        'dircancion': request.json['song'],
-        'dircaratula': request.json['photo'],
+        'dircancion': request.json['namesong'],
+        'dircaratula': request.json['namephoto'],
         'fecha': time.strftime("%d/%m/%y"),
     })
     
-    return id;
+    return 'ok'
 
 if __name__ == "__main__":
     app.run(debug=True)

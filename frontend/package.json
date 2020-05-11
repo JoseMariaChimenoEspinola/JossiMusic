@@ -16,6 +16,7 @@
     "bootstrap": "^4.4.1",
     "bootswatch": "^4.4.1",
     "material-ui-audio-player": "^1.1.7",
+    "move-file": "^2.0.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.0",
     "react-dom": "^16.13.1",

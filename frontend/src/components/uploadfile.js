@@ -105,8 +105,18 @@ export default function FormUploader() {
     const [song, setSong] = useState([]);
 
     function handleSong(event) {
-        alert(event.target.files[0]);
         setSong(event.target.files[0]);
+
+        const fd = new FormData();
+        fd.append('image', event.target.files[0], event.target.files[0].name);
+        const res = fetch('https://jossicmedia.s3.eu-west-3.amazonaws.com/media/prueba.mp3', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: fd
+        })
+        console.log(res);
     }
     function resetSong() {
         setSong('');
@@ -114,7 +124,6 @@ export default function FormUploader() {
     
     const [photo, setPhoto] = useState([]);
     function handlePhoto(event){
-        alert(event.target.files[0]);
         setPhoto(event.target.files[0]);
     }
     function resetPhoto() {
@@ -126,16 +135,20 @@ export default function FormUploader() {
     const [genero, setGen] = useState("");
     const [visibility, setVis] = useState("");
 
-    async function handleInfo() {
+    async function handleInfo(event) {
+        event.preventDefault();
         let artista = localStorage.getItem('usuario');
+
+        let namesong = song.name;
+        let namephoto = photo.name; 
         const res = await fetch('/api/uploadsong', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                song,
-                photo,
+                namesong,
+                namephoto,
                 titulo,
                 descripcion,
                 genero,
@@ -143,7 +156,7 @@ export default function FormUploader() {
                 artista
             })
         })
-        console.log(res.json());
+        console.log(res);
     }
 
     function PreviewCaratula() {
@@ -162,7 +175,6 @@ export default function FormUploader() {
                 <p>{song.name}</p>
                 <ThemeProvider theme={muiTheme}>
                     <AudioPlayer
-                        elevation={1}
                         width="100%"
                         variation="default"
                         spacing={3}
@@ -187,7 +199,7 @@ export default function FormUploader() {
                 <h2>Archivos</h2>
                 <p>Pista Musical</p>
                     <div>
-                        {song == '' ? <Dropzone>
+                        {song == '' ? <Dropzone onDrop={handleSong}>
                             {({ getRootProps, getInputProps, isDragActive, isDragReject }) => (
                                 <div {...getRootProps({ className: "dropzone" })} className={classes.dropzone}>
                                     <input {...getInputProps()} onChange={handleSong} accept="audio/*" />
