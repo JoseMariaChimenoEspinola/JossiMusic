@@ -11,7 +11,9 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { MenuHeaderLoginSearch } from './Menu';
+import { storage } from '../firebase/config';
 
 const muiTheme = createMuiTheme({});
 
@@ -102,53 +104,98 @@ const useStyles = makeStyles((theme) => ({
 export default function FormUploader() {
     const classes = useStyles();
 
-    const [song, setSong] = useState([]);
+    // Subir cancion a firebase
+    const [song, setSong] = useState("");//Almacenar momentaniamente la informacion para poder hacer la preview y recuperar datos
+    const [urlsong, setUrlSong] = useState("");// almacenar la direccion url de firebase con el archivo para guardarla en la BBDD mas tarde
+    const [progressong, setProgressSong] = useState(0);
 
     function handleSong(event) {
-        setSong(event.target.files[0]);
+        var file = event.target.files[0];
+        setSong(file);
 
-        const fd = new FormData();
-        fd.append('image', event.target.files[0], event.target.files[0].name);
-        const res = fetch('https://jossicmedia.s3.eu-west-3.amazonaws.com/media/prueba.mp3', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
+        var namefile = String(file.name);
+        var typefile = String(file.type);
+        var blob = new Blob([file], { type: typefile });//convierto el archivo a un blob con el tipo de archivo dinamicamente.
+
+        const uploadSong = storage.ref(`songs/${namefile}`).put(blob);
+        uploadSong.on(
+            "state_changed",
+            snapshot => { 
+                const progress = Math.round(
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                );
+                setProgressSong(progress);
+             },
+            error => {
+                console.log(error);
             },
-            body: fd
-        })
-        console.log(res);
+            () => {
+                storage.ref("songs").child(namefile).getDownloadURL().then(url => { setUrlSong(url); });
+            }
+        );
+        
     }
     function resetSong() {
         setSong('');
+        var namefile = String(song.name);
+        storage.ref(`songs/${namefile}`).delete();
     }
     
-    const [photo, setPhoto] = useState([]);
+    //Subir caratula a Firebase
+    const [photo, setPhoto] = useState("");
+    const [urlCaratula, setUrlCarat] = useState("");
+    const [progrescarat, setProgressCarat] = useState(0);
+
     function handlePhoto(event){
-        setPhoto(event.target.files[0]);
+        var file = event.target.files[0];
+        setPhoto(file);
+        //FireBase Upload
+        var namefile = String(file.name);
+        var typefile = String(file.type);
+        var blob = new Blob([file], { type: typefile });//convierto el archivo a un blob con el tipo de archivo dinamicamente.
+        console.log(blob);
+
+        const uploadCarat = storage.ref(`caratulas/${namefile}`).put(blob);
+        uploadCarat.on(
+            "state_changed",
+            snapshot => { 
+                const progress = Math.round(
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                );
+                setProgressCarat(progress);
+             },
+            error => {
+                console.log(error);
+            },
+            () => {
+                storage.ref("caratulas").child(namefile).getDownloadURL().then(url => { setUrlCarat(url); });
+            }
+        );
+        console.log(urlCaratula);
     }
     function resetPhoto() {
-        setPhoto('');        
+        setPhoto('');
+        var namefile = String(photo.name);
+        storage.ref(`songs/${namefile}`).delete();
     }
 
     const [titulo, setTitulo] = useState('');
     const [descripcion, setDesc] = useState('');
     const [genero, setGen] = useState("");
     const [visibility, setVis] = useState("");
-
     async function handleInfo(event) {
         event.preventDefault();
         let artista = localStorage.getItem('usuario');
 
-        let namesong = song.name;
-        let namephoto = photo.name; 
+        // API CALL
         const res = await fetch('/api/uploadsong', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                namesong,
-                namephoto,
+                urlsong,
+                urlCaratula,
                 titulo,
                 descripcion,
                 genero,
@@ -164,7 +211,7 @@ export default function FormUploader() {
             <div className={classes.containerPreview}>
                 <p>{photo.name}</p>
                 <img src={URL.createObjectURL(photo)} className={classes.caratulaPreview}></img>
-                <HighlightOffIcon onClick={resetPhoto} className={classes.closeIcon}/>
+                {progrescarat == 100 ? <HighlightOffIcon onClick={resetPhoto} className={classes.closeIcon} /> : <CircularProgress className={classes.closeIcon} variant="static" value={progrescarat} max="100" />}
             </div>
         );
     }
@@ -183,7 +230,7 @@ export default function FormUploader() {
                         src={URL.createObjectURL(song)}
                     />
                 </ThemeProvider>
-                <HighlightOffIcon onClick={resetSong} className={classes.closeIcon} />
+                {progressong == 100 ? <HighlightOffIcon onClick={resetSong} className={classes.closeIcon} /> : <CircularProgress className={classes.closeIcon} variant="static" value={progressong} max="100"/>}
             </div>
         );
     }
