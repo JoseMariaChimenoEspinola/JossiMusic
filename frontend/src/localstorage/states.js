@@ -5,6 +5,11 @@ function SetUserState(params, user) {
     localStorage.setItem('usuario', user);
 }
 
+function SetState(params) {
+    localStorage.setItem('state', params);
+    window.location.reload(false);
+}
+
 function GetStateLogin() {
     return localStorage.getItem('state');
 }
@@ -15,4 +20,4 @@ function DeleteStateLogin() {
     window.location.reload(false);
 }
 
-export { SetUserState, GetStateLogin, DeleteStateLogin};
+export { SetUserState, GetStateLogin, DeleteStateLogin, SetState};

@@ -1,5 +1,5 @@
 import React from 'react';
-import { DeleteStateLogin } from '../localstorage/states';
+import { DeleteStateLogin, SetState } from '../localstorage/states';
 
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -200,7 +200,7 @@ function MenuHeaderLoginSearch(params) {
                 <Toolbar>
                     <MenuOpciones />
                     <Typography className={classes.title} variant="h6" noWrap>
-                        <img src={logo} className="logo-menu" />
+                        <img src={logo} className="logo-menu" onClick={() => SetState('homelogin')}/>
                     </Typography>
                     <div className={classes.search}>
                         <div className={classes.searchIcon}>

@@ -1,7 +1,7 @@
 import '../../node_modules/aos/dist/aos.css';
 import React from 'react';
 import AOS from 'aos';
-import CarouselInicio from './Slider';
+import {CarouselInicio} from './Slider';
 import {CrearCuenta} from './Dialogs';
 
 /* Imagenes */

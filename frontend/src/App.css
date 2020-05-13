@@ -150,6 +150,23 @@ header{
   overflow: hidden;
 }
 
+/*Carousel login*/
+.carousel.slide{
+  height: 77vh;
+  overflow: hidden;
+}
+
+.active.carousel-item{
+  height: 77vh;
+}
+
+.carousel.slide img{
+  object-fit: cover;
+  height: 77vh;
+  overflow: hidden;
+}
+
+
 /*************************** Content ***************************/
 
 .info-plataforma{

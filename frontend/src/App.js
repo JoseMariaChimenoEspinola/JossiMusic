@@ -3,6 +3,7 @@ import './App.css';
 import { MenuHeader, MenuHeaderLoginSearch} from './components/Menu.js';
 import ImageArtists from './components/avatars';
 import { ResponsiveFoto, Carousel, InfoSectionHome, ElvisFoto, LoginRegisHome} from './components/homeelements.js';
+import { CarouselInicioLogin } from './components/Slider';
 
 class Home extends React.Component {
   render() {
@@ -46,7 +47,9 @@ class HomeLogin extends React.Component{
       <header>
           <MenuHeaderLoginSearch />
       </header>
-      
+      <section className="content">
+          <CarouselInicioLogin/>
+      </section>
       </div>);
   }
 }
