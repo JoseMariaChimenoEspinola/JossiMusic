@@ -77,6 +77,7 @@ export default function CarouselInicioLogin() {
                 />
 
                 <Carousel.Caption>
+                    
                     <Button variant="contained">Escuchar Canción</Button>
                 </Carousel.Caption>
             </Carousel.Item>

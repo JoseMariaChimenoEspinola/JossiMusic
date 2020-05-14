@@ -128,7 +128,7 @@ function MenuHeader(){
     );
 }
 
-function MenuHeaderLoginSearch(params) {
+function MenuHeaderLoginSearch() {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -166,7 +166,7 @@ function MenuHeaderLoginSearch(params) {
         >
             <MenuItem onClick={handleMenuClose}>Perfil, {localStorage.getItem('usuario')}</MenuItem>
             <MenuItem onClick={handleMenuClose}>Configuracion de cuenta</MenuItem>
-            <MenuItem onClick={DeleteStateLogin}>Cerrar sesión</MenuItem>
+            <NavLink to={"/"}><MenuItem onClick={DeleteStateLogin}>Cerrar sesión</MenuItem></NavLink>
         </Menu>
     );
 
@@ -201,7 +201,7 @@ function MenuHeaderLoginSearch(params) {
                 <Toolbar>
                     <MenuOpciones />
                     <Typography className={classes.title} variant="h6" noWrap>
-                        <img src={logo} className="logo-menu" onClick={() => SetState('homelogin')}/>
+                        <NavLink to="/"><img src={logo} className="logo-menu" /></NavLink>
                     </Typography>
                     <div className={classes.search}>
                         <div className={classes.searchIcon}>
@@ -284,7 +284,7 @@ function MenuOpciones(){
             <List>
                 <ListItem button>
                     <ListItemIcon><ArrowBackIosIcon onClick={toggleDrawer(anchor, false)}/></ListItemIcon>
-                    <img src={logo} className="logo-menu" /> 
+                    <NavLink to="/"><img src={logo} className="logo-menu" /></NavLink>
                 </ListItem>
             </List>
             <Divider />

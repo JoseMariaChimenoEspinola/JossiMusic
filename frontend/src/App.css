@@ -139,10 +139,6 @@ header{
   font-size: 3rem;
 }
 
-.carousel-caption{
-  bottom: 300px;
-}
-
 .carousel.slide{
   height: 100vh;
   overflow: hidden;
