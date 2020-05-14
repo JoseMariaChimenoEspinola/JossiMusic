@@ -84,10 +84,4 @@ class HomeLogin extends React.Component{
   }
 }
 
-class ProfileUser extends React.Component{
-  render(){
-    return 0;
-  }
-}
-
 export {Home, HomeLogin};

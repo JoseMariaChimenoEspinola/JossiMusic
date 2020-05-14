@@ -4,16 +4,18 @@ import { BrowserRouter as Router,Switch, Route, withRouter} from 'react-router-d
 import {Home, HomeLogin} from './App';
 import FormUploader from './components/uploadfile';
 import { GetStateLogin } from './localstorage/states';
+import ProfileUser from './components/Perfil';
 
-function ShowHidePages(){
+
+
+function ShowHidePages() {
   let check = GetStateLogin();
-  
-  if (check == 'homelogin'){
-    return <HomeLogin/>;
-  }else{
+
+  if (check == 'homelogin') {
+    return <HomeLogin />;
+  } else {
     return <Home />;
   }
-
 }
 
 ReactDOM.render(
@@ -21,6 +23,7 @@ ReactDOM.render(
     <Switch>
       <Route exact path="/" component={ShowHidePages}></Route>
       <Route path="/uploadcontent" component={FormUploader}></Route>
+      <Route path="/perfil" component={ProfileUser}></Route>
 
     </Switch>
   </Router>,

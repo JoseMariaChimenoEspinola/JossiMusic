@@ -164,7 +164,7 @@ function MenuHeaderLoginSearch() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose}>Perfil, {localStorage.getItem('usuario')}</MenuItem>
+            <NavLink to={"/perfil"}><MenuItem onClick={handleMenuClose}>Perfil, {localStorage.getItem('usuario')}</MenuItem></NavLink>
             <MenuItem onClick={handleMenuClose}>Configuracion de cuenta</MenuItem>
             <NavLink to={"/"}><MenuItem onClick={DeleteStateLogin}>Cerrar sesión</MenuItem></NavLink>
         </Menu>

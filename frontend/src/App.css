@@ -10,6 +10,10 @@ body {
     overflow-x: hidden;
 }
 
+.content{
+  padding-top: 60px;
+}
+
 *{
   margin: 0px;
   padding: 0px;
@@ -315,6 +319,23 @@ header{
 .lista-inicio-best{
   padding: 40px;
 }
+/*************************** Perfil ***************************/
+.profile-style-container{
+  width: 90%;
+  margin: 30px auto;
+  display: flex;
+  justify-content: space-around;
+  border-bottom: 1px double black;
+}
+
+.hideInput{
+  display: none;
+}
+
+.hoverAvatar:hover{
+  color: white !important;
+}
+
 /*************************** Footer ***************************/
 footer{
   width: 100%;
