@@ -1,5 +1,6 @@
 import React from 'react';
 import { DeleteStateLogin, SetState } from '../localstorage/states';
+import { NavLink } from 'react-router-dom';
 
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -216,15 +217,14 @@ function MenuHeaderLoginSearch(params) {
                         />
                     </div>
                     <div className={classes.grow} />
-                    <Button
+                    <NavLink to={"/uploadcontent"}><Button
                         variant="contained"
                         color="primary"
                         className={classes.button}
                         startIcon={<CloudUploadIcon />}
-                        onClick={() => { localStorage.setItem('state', 'upload'); window.location.reload(false);}}
                     >
                         Subir
-                    </Button>
+                    </Button></NavLink>
                     <div className={classes.sectionDesktop}>
                         
                         <IconButton

@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import Button from '@material-ui/core/Button';
 import '../App.css';
 import Carousel from 'react-bootstrap/Carousel';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -64,11 +65,8 @@ export default function CarouselInicioLogin() {
                     src={mikislide}
                     alt="First slide"
                 />
-                <Carousel.Caption className={"Caption-1"}>
-                    <div className="background-slider-text">
-                        <h3>¡Tu musica mas brillante que nunca!</h3>
-                        <p>Muestra al mundo todo tu potencial a través de tus creaciones.</p>
-                    </div>
+                <Carousel.Caption>
+                        <Button variant="contained">Escuchar Canción</Button>
                 </Carousel.Caption>
             </Carousel.Item>
             <Carousel.Item>
@@ -78,25 +76,8 @@ export default function CarouselInicioLogin() {
                     alt="Second slide"
                 />
 
-                <Carousel.Caption className={"Caption-2"}>
-                    <div className="background-slider-text">
-                        <h3>Hazte Oír</h3>
-                        <p>Consigue llegar a miles de usuarios con Jossic</p>
-                    </div>
-                </Carousel.Caption>
-            </Carousel.Item>
-            <Carousel.Item>
-                <img
-                    className="d-block w-100"
-                    src={josechu}
-                    alt="Second slide"
-                />
-
-                <Carousel.Caption className={"Caption-2"}>
-                    <div className="background-slider-text">
-                        <h3>Hazte Oír</h3>
-                        <p>Consigue llegar a miles de usuarios con Jossic</p>
-                    </div>
+                <Carousel.Caption>
+                    <Button variant="contained">Escuchar Canción</Button>
                 </Carousel.Caption>
             </Carousel.Item>
         </Carousel>

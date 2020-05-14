@@ -67,9 +67,11 @@ def uploadSong():
         'descripcion': request.json['descripcion'],
         'artista': request.json['artista'],
         'genero': request.json['genero'],
-        'dircancion': request.json['namesong'],
-        'dircaratula': request.json['namephoto'],
+        'dircancion': request.json['urlsong'],
+        'dircaratula': request.json['urlCaratula'],
         'fecha': time.strftime("%d/%m/%y"),
+        'reproducciones': 0,
+        'likes': 0
     })
     
     return 'ok'

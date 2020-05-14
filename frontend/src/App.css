@@ -19,7 +19,7 @@ button{
   font-family: 'Roboto', sans-serif;
 }
 
-button:focus {outline:0;}
+button:focus {outline:0 !important;}
 
 
 .normalbuttons{
@@ -40,6 +40,14 @@ button:focus {outline:0;}
 #wrapper{
   width: 100%;
   margin: auto;
+}
+
+.divider{
+  margin-top: 30px !important;
+}
+
+svg:hover{
+  color: black !important;
 }
 
 /*************************** Menu Header ***************************/
@@ -136,36 +144,26 @@ header{
 }
 
 .carousel.slide{
-  height: 77vh;
+  height: 100vh;
   overflow: hidden;
 }
 
 .active.carousel-item{
-  height: 77vh;
+  height: 100vh;
 }
 
 .carousel.slide img{
   object-fit: cover;
-  height: 77vh;
+  height: 100vh;
   overflow: hidden;
 }
 
-/*Carousel login*/
-.carousel.slide{
-  height: 77vh;
-  overflow: hidden;
-}
-
-.active.carousel-item{
-  height: 77vh;
-}
-
-.carousel.slide img{
-  object-fit: cover;
-  height: 77vh;
-  overflow: hidden;
-}
-
+  .Caption-1{
+    bottom: 410px !important;
+  }
+  .Caption-2{
+    bottom: 410px !important;
+  }
 
 /*************************** Content ***************************/
 
@@ -312,6 +310,15 @@ header{
 #alert-newuser-regis{
   display: none;
 }
+
+/************************** Content Login***********************/
+.masescuchadas-inicio{
+  margin-top: 30px;
+  padding: 30px;
+}
+.lista-inicio-best{
+  padding: 40px;
+}
 /*************************** Footer ***************************/
 footer{
   width: 100%;
@@ -348,15 +355,12 @@ footer{
   }
   .carousel.slide img{
     object-fit: cover;
-    height: 93vh !important;
+    height: 100vh !important;
   }
   .carousel.slide{
-  height: 93vh !important;
+  height: 100vh !important;
   overflow: hidden;
   margin-top: 0px !important;
-  }
-  .active.carousel-item{
-  height: 93vh !important;
   }
   .Caption-1{
     bottom: 200px !important;
