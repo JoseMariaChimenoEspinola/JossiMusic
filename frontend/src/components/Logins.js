@@ -69,7 +69,7 @@ function LoginForm() {
             },
         })
         const data = res['status'];
-        if (data == 500){
+        if (data == 500 && (usuario == "" || contra == "")){
             document.getElementById('alert-error-login').style.display = "block";
             
         }else{
