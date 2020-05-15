@@ -5,6 +5,7 @@ with open (activate_this_file) as _file:
 
 import sys
 import time
+import json
 from flask import Flask, jsonify, request
 from flask_pymongo import PyMongo, ObjectId
 from flask_cors import CORS
@@ -76,12 +77,29 @@ def uploadSong():
     
     return 'ok'
 
-@app.route('/api/getMusic/<artista>', methods=['GET'])
-def getUser(artista):
-    #sys.stderr.write(str(password))
-    checkUser = dbfiles.find({'artista': artista})
+#get music users
 
-    return jsonify(checkUser)
+@app.route('/api/getMusic/<artista>', methods=['GET'])
+def getUserSong(artista):
+
+    songs = []
+    search = dbfiles.find({'artista': artista})
+
+    for doc in search:
+        songs.append({
+            '_id': str(ObjectId(doc['_id'])),
+            'titulo': doc['titulo'],
+            'artista': doc['artista'],
+            'genero': doc['genero'],
+            'dircancion': doc['dircancion'],
+            'dircaratula': doc['dircaratula'],
+            'fecha': doc['fecha'],
+            'reproducciones': doc['reproducciones'],
+            'likes': doc['likes']
+            })
+    responseJson = json.dumps(songs)    
+
+    return responseJson
 
 if __name__ == "__main__":
     app.run(debug=True)

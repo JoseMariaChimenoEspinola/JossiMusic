@@ -1,20 +1,29 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import AudioPlayer from 'material-ui-audio-player';
 
 import { MenuHeaderLoginSearch } from './Menu';
 
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 
-class ProfileUser extends React.Component {
-  render() {
+function ProfileUser() {
     var artista = localStorage.getItem('usuario');
+    var list = [];
 
-    async function checkUserApi() {
-      const res = await fetch('/api/getMusic/' + artista)
-      const data = await res.json();
-      console.log(data);
+    const checkUserApi = async () => {
+        const res = await fetch('/api/getMusic/' + artista).then(resp => resp.json());
+        Promise.all(res).then(data => {
+            for(let i = 0;i<data.length;i++){
+                list.push(data[i]);
+            }
+        });
+      console.log(list[0].titulo);
     }
+
+    useEffect(() => {
+      checkUserApi();
+    });
 
     const likes = 0;
     var subs = 0;
@@ -54,12 +63,10 @@ class ProfileUser extends React.Component {
           </div>
           <div className="profile-style-container">
               <h1>Ultimas subidas</h1>
-            <div>{checkUserApi()}</div>
           </div>
         </section>
       </div>
     );
   }
-}
 
 export default ProfileUser;

@@ -20,14 +20,14 @@
     "move-file": "^2.0.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.0",
-    "react-dom": "^16.13.1",
+    
     "react-dropzone": "^11.0.1",
     "react-firebase": "^2.2.8",
     "react-native-router-flux": "^4.2.0",
     "react-native-swift": "^1.2.3",
     "react-native-track-player": "^1.2.3",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.4.1",
+    "react-scripts": "^3.4.1",
     "universal-cookie": "^4.0.3"
   },
   "scripts": {
