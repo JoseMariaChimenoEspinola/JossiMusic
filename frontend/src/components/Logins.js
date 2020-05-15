@@ -61,7 +61,6 @@ function LoginForm() {
 
 
     async function checkUserApi(){
-        console.log(contra)
         const res = await fetch('/api/login/' + usuario +'/'+contra,{
             method: 'GET',
             headers: {

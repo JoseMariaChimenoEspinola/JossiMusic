@@ -9,20 +9,11 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 class ProfileUser extends React.Component {
   render() {
     var artista = localStorage.getItem('usuario');
-    var songs = [];
 
     async function checkUserApi() {
-      const res = await fetch('/api/getMusic/' + artista, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-      })
-
-      
-      songs = res.json();
-      console.log(songs);
-      
+      const res = await fetch('/api/getMusic/' + artista)
+      const data = await res.json();
+      console.log(data);
     }
 
     const likes = 0;
