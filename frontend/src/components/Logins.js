@@ -69,13 +69,12 @@ function LoginForm() {
             },
         })
         const data = res['status'];
-        if (data == 500 && (usuario == "" || contra == "")){
-            document.getElementById('alert-error-login').style.display = "block";
-            
-        }else{
+        if (data == 200){
             document.getElementById('alert-error-login').style.display = "none";
             SetUserState("homelogin", usuario);
             window.location.reload(false);
+        }else{
+            document.getElementById('alert-error-login').style.display = "block";
         }
         
         console.log(data);

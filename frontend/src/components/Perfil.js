@@ -8,12 +8,30 @@ import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 
 class ProfileUser extends React.Component {
   render() {
+    var artista = localStorage.getItem('usuario');
+    var songs = [];
+
+    async function checkUserApi() {
+      const res = await fetch('/api/getMusic/' + artista, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      })
+
+      
+      songs = res.json();
+      console.log(songs);
+      
+    }
+
     const likes = 0;
     var subs = 0;
 
     async function addLike() {
       likes = likes +1;
     }
+
     return (
       <div id="wrapper">
         <header>
@@ -45,6 +63,7 @@ class ProfileUser extends React.Component {
           </div>
           <div className="profile-style-container">
               <h1>Ultimas subidas</h1>
+            <div>{checkUserApi()}</div>
           </div>
         </section>
       </div>

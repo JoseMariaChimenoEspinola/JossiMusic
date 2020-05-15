@@ -76,6 +76,13 @@ def uploadSong():
     
     return 'ok'
 
+@app.route('/api/getMusic/<artista>', methods=['GET'])
+def getUser(artista):
+    #sys.stderr.write(str(password))
+    checkUser = dbfiles.find({'artista': artista})
+
+    return jsonify(checkUser)
+
 if __name__ == "__main__":
     app.run(debug=True)
 
