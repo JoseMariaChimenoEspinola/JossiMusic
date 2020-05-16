@@ -18,7 +18,7 @@ function ProfileUser() {
                 list.push(data[i]);
             }
         });
-      console.log(list[0].titulo);
+      console.log(res[0]);
     }
 
     useEffect(() => {
