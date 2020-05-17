@@ -97,6 +97,20 @@ def getUserSong(artista):
 
     return jsonify(songs)
 
+# Change Password from configuration
+
+@app.route('/api/checkOldPassoword/<usuario>/<password>', methods=['GET'])
+def changePassword(usuario, password):
+    checkUser = db.find_one({'usuario': usuario, 'contra': password})
+
+    return checkUser['usuario']
+
+@app.route('/api/changePassword/<usuario>/<password>', methods=['PUT'])
+def changePassword(usuario,password):
+    db.update_one({'usuario': usuario}, {'$set': {'contra': password}})
+
+    return 'ok'
+
 if __name__ == "__main__":
     app.run(debug=True)
 
