@@ -1,11 +1,12 @@
-import React, {useState,useEffect, Suspense} from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import AudioPlayer from 'material-ui-audio-player';
+import AOS from 'aos';
 
 import Divider from '@material-ui/core/Divider';
 import './App.css';
-import { MenuHeader, MenuHeaderLoginSearch} from './components/Menu.js';
+import { MenuHeader, MenuHeaderLoginSearch } from './components/Menu.js';
 import ImageArtists from './components/avatars';
-import { ResponsiveFoto, Carousel, InfoSectionHome, ElvisFoto, LoginRegisHome} from './components/homeelements.js';
+import { ResponsiveFoto, Carousel, InfoSectionHome, ElvisFoto, LoginRegisHome } from './components/homeelements.js';
 import { CarouselInicioLogin } from './components/Slider';
 
 class Home extends React.Component {
@@ -13,23 +14,23 @@ class Home extends React.Component {
 
 
     return (
-      
+
       <div id="wrapper">
         <header>
           <MenuHeader />
         </header>
         <section className="content">
-          <Carousel/>
-          <InfoSectionHome/>
+          <Carousel />
+          <InfoSectionHome />
           <div className="conatiner-artists-home">
-          <h2>Sumate a una comunidad de artistas diversa, atractiva y divertida </h2>
+            <h2>Sumate a una comunidad de artistas diversa, atractiva y divertida </h2>
             <div className="container-artist-home">
               <ImageArtists />
             </div>
           </div>
-          <ResponsiveFoto/>
-          <ElvisFoto/>
-          <LoginRegisHome/>
+          <ResponsiveFoto />
+          <ElvisFoto />
+          <LoginRegisHome />
         </section>
         <footer>
           <div className="footer-container">
@@ -37,51 +38,57 @@ class Home extends React.Component {
           </div>
         </footer>
       </div>
-      
+
     );
   }
 }
 
-class HomeLogin extends React.Component{
-
-
-
-  render(){
-
-    
-    return(
-    <div id="wrapper">
-      <header>
+class HomeLogin extends React.Component {
+  constructor(props, context) {
+    super(props, context);
+    AOS.init({
+      duration: 1200,
+    });
+  }
+  componentWillReceiveProps() {
+    AOS.refresh();
+  }
+  render() {
+    return (
+      <div id="wrapper">
+        <header>
           <MenuHeaderLoginSearch />
-      </header>
-      <section className="content">
-          <CarouselInicioLogin />
-          <Divider className="divider"/>
-          <section className="masescuchadas-inicio">
-            <h2>Mas escuchadas (Top 5)</h2>
-            {function () {
-              let rows = [];
-              for (let i = 0; i < 5; i++){
-                rows.push(<div className="lista-inicio-best">
-                  <AudioPlayer
-                    controls
-                    elevation={1}
-                    width="100%"
-                    variation="default"
-                    spacing={3}
-                    download={true}
-                    order="standart"
-                    preload="auto"
-                    src={"https://firebasestorage.googleapis.com/v0/b/jossicstorage.appspot.com/o/songs%2FDaddy%20Yankee%20-%20Gasolina%20(Blasterjaxx%20Bootleg)%20%5BShort%20Edit%20Dimitri%20Vegas%20%26%20Like%20Mike%20Tomorrowland%202016%5D.mp3?alt=media&token=f2965dc1-56f9-4434-bda3-84823324254f"}
-                  />
-                </div>);
+        </header>
+        <div data-aos="fade-down">
+          <section className="content">
+            <CarouselInicioLogin />
+            <Divider className="divider" />
+            <section className="masescuchadas-inicio">
+              <h2>Mas escuchadas (Top 5)</h2>
+              {function () {
+                let rows = [];
+                for (let i = 0; i < 5; i++) {
+                  rows.push(<div className="lista-inicio-best">
+                    <AudioPlayer
+                      controls
+                      elevation={1}
+                      width="100%"
+                      variation="default"
+                      spacing={3}
+                      download={true}
+                      order="standart"
+                      preload="auto"
+                      src={"https://firebasestorage.googleapis.com/v0/b/jossicstorage.appspot.com/o/songs%2FDaddy%20Yankee%20-%20Gasolina%20(Blasterjaxx%20Bootleg)%20%5BShort%20Edit%20Dimitri%20Vegas%20%26%20Like%20Mike%20Tomorrowland%202016%5D.mp3?alt=media&token=f2965dc1-56f9-4434-bda3-84823324254f"}
+                    />
+                  </div>);
                 }
                 return rows;
-              }() }
+              }()}
+            </section>
           </section>
-      </section>
+        </div>
       </div>);
   }
 }
 
-export {Home, HomeLogin};
+export { Home, HomeLogin };

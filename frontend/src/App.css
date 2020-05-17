@@ -336,6 +336,71 @@ header{
   color: white !important;
 }
 
+/**************************Configuracion***********************/
+
+.conf-container{
+  width: 80%;
+  margin: auto;
+  border: 1px solid silver;
+}
+
+.conf-container h1{
+  text-align: center;
+  padding-top: 20px;
+}
+
+.container-options{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+.container-option-div{
+  width: 33%;
+  padding: 30px;
+}
+
+.container-option-div h3{
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.container-option-div p{
+  color: grey;
+}
+
+.forms-options{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.input-password-changes{
+  margin: 5px 0px 10px 0px !important;
+}
+
+.button-submit-options{
+  margin-top: 20px !important;
+}
+
+.select-option-musicstyle{
+  width: 100% !important;
+}
+
+.option-check-container{
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.input-mail-newsletter-options{
+  margin-bottom: 10px !important;
+  margin-left: 5px !important;
+}
+
+.divider-options-conf{
+  padding-left: 1px;
+  padding-bottom: 400px;
+}
+
 /*************************** Footer ***************************/
 footer{
   width: 100%;
@@ -352,6 +417,7 @@ footer{
 .footer-container p{
   margin-top: 13px;
 }
+
 
 /*************************** Mobile ***************************/
 @media only screen and (max-width: 767px) {
