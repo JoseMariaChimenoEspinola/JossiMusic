@@ -17,8 +17,16 @@ import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import AOS from 'aos';
 
-
+/* Menus */
 import { MenuHeaderLoginSearch } from './Menu';
+
+/* Cartas */
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Typography from '@material-ui/core/Typography';
 
 /* Iconos */
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
@@ -28,20 +36,35 @@ import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
 
 function ProfileUser() {
-  var artista = localStorage.getItem('usuario');
-
-  var [songs, setSongs] = useState('');
+  const artista = localStorage.getItem('usuario');
+  var list = new Array; 
 
   const checkUserApi = async () => {
-    const res = await fetch('/api/getMusic/' + artista).then(resp => setSongs(resp));
-    return res;
+    
+      await fetch('/api/getMusic/' + artista).then(resp => resp.json()).then(data => {
+        for(let x of data){
+          list.push(x);
+        }
+      });
   }
 
-  useEffect(() => {
-    var rest = checkUserApi();
-
-  });
-
+  setTimeout(function() {
+    checkUserApi();
+    setTimeout(function() {
+      var data = "";
+      for(var i = 0;i<list.length;i++){
+        data += '<div class="div-cancion-unica">';
+        data += '<img class="caratula-preview-perfil" src="' + list[i].dircaratula +'"></img>';
+        data += '<p>' + list[i].titulo + '</p>';
+        
+        data += '<p>' + list[i].genero + '</p>';
+        data += '<p>' + list[i].fecha + '</p>';
+        data += '</div>';
+        document.getElementById('songs-container-author').innerHTML = data;
+      }
+    }, 1100)
+  }, 0);
+  
 
   const likes = 0;
   var subs = 0;
@@ -78,17 +101,19 @@ function ProfileUser() {
         </div>
         <div className="profile-style-container">
           <h1>Ultimas subidas</h1>
-
         </div>
+        <div id="songs-container-author"></div>
       </section>
     </div>
   );
 }
 
 function Configuration() {
+  let usuario = localStorage.getItem('usuario');
   /* Cambio de contraseña */
 
   const [oldPassword, setOldPassword] = useState('');
+  const [conf, setConf] = useState('');
   const [showOldPass, setShowOldPass] = React.useState({
     showPassword: false
   });
@@ -97,6 +122,31 @@ function Configuration() {
     setShowOldPass({ ...showOldPass, showPassword: !showOldPass.showPassword });
   };
 
+  const handleCheckOldPassword = (event) => {
+    CheckPassword(event.target.value);
+  }
+
+  async function CheckPassword(pass) {
+    setOldPassword(pass);
+    console.log(oldPassword);
+
+    var conf;
+
+    await fetch('/api/checkOldPassoword/' + usuario + '/' + oldPassword, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    }).then(resp => resp.text()).then(data => conf = data)
+
+    if (conf == 'False') {
+      setConf(true);
+    } else {
+      setConf(false);
+      /*document.getElementById('alert-newuser-regis').style.display = "block";
+      document.getElementById('alert-error-regis').style.display = "none";*/
+    }
+  }
 
   const [newPassword, setNewPassword] = useState('');
   const [showNewPass, setShowNewPass] = React.useState({
@@ -120,6 +170,7 @@ function Configuration() {
   const handleMouseDownPassword = event => {
     event.preventDefault();
   };
+
 
   /* Notificaciones */
   const [checked, setChecked] = React.useState(false);
@@ -150,10 +201,11 @@ function Configuration() {
                 <FormControl className="input-password-changes">
                   <InputLabel htmlFor="standard-adornment-password">Contraseña antigua:</InputLabel>
                   <Input
-                    id="outlined-adornment-password"
+                    id="outlined-old-password"
                     type={showOldPass.showPassword ? "text" : "password"}
                     value={oldPassword}
-                    onChange={e => setOldPassword(e.target.value)}
+                    onInput={handleCheckOldPassword}
+                    error={conf == '' ? false : true}
                     endAdornment={
                       <InputAdornment position="end">
                         <IconButton
@@ -212,7 +264,7 @@ function Configuration() {
                     }
                   />
                 </FormControl>
-                <Button variant="contained" color="primary" className="button-submit-options">Cambiar contraseña</Button>
+                <Button variant="contained" color="primary" className="button-submit-options" disabled={conf == '' ? false : true}>Cambiar contraseña</Button>
               </form>
             </div>
 
@@ -252,7 +304,7 @@ function Configuration() {
                   color="primary"
                   inputProps={{ 'aria-label': 'secondary checkbox' }}
                 /><label htmlFor="">He leido y acepto la Politica de Privacidad</label>
-                <Button variant="contained" color="primary" className="button-submit-options">Suscribete a Newsletter</Button>
+                <Button variant="contained" color="primary" className="button-submit-options" >Suscribete a Newsletter</Button>
               </form>
             </div>
 

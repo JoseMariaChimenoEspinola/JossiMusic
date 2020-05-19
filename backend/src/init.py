@@ -47,7 +47,7 @@ def setNewUser():
             'contra': request.json['contra'],
             'genero': request.json['genero'],
         })
-        newUser(request.json['email'])
+        #newUser(request.json['email'])
 
     sys.stderr.write('log mgs'+str(check))
     
@@ -92,18 +92,24 @@ def getUserSong(artista):
             'fecha': doc['fecha'],
             'reproducciones': doc['reproducciones'],
             'likes': doc['likes']
-            })
-    responseJson = json.dumps(songs)    
+            })  
 
     return jsonify(songs)
 
 # Change Password from configuration
 
 @app.route('/api/checkOldPassoword/<usuario>/<password>', methods=['GET'])
-def changePassword(usuario, password):
+def checkPassword(usuario, password):
+    validation = True
     checkUser = db.find_one({'usuario': usuario, 'contra': password})
 
-    return checkUser['usuario']
+    if checkUser == None:
+        validation =  False
+    else:
+        validation = True
+    print(validation)
+    return str(validation)
+
 
 @app.route('/api/changePassword/<usuario>/<password>', methods=['PUT'])
 def changePassword(usuario,password):

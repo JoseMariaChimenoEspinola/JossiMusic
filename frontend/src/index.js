@@ -5,6 +5,7 @@ import {Home, HomeLogin} from './App';
 import FormUploader from './components/uploadfile';
 import { GetStateLogin } from './localstorage/states';
 import { PerfilUsuario, ParametrosUsuario} from './components/Perfil';
+import PaginaCancion from './components/songpage';
 
 
 
@@ -25,6 +26,7 @@ ReactDOM.render(
       <Route path="/uploadcontent" component={FormUploader}></Route>
       <Route path="/perfil" component={PerfilUsuario}></Route>
       <Route path="/configuration" component={ParametrosUsuario}></Route>
+      <Route path="/cancion" component={PaginaCancion}></Route>
     </Switch>
   </Router>,
   document.getElementById('root')

@@ -13,7 +13,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import Button from '@material-ui/core/Button';
@@ -29,6 +28,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import {LoginDialog} from './Dialogs';
 
@@ -164,9 +164,9 @@ function MenuHeaderLoginSearch() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <NavLink to={"/perfil"}><MenuItem onClick={handleMenuClose}>Perfil, {localStorage.getItem('usuario')}</MenuItem></NavLink>
-            <NavLink to={"/configuration"}><MenuItem onClick={handleMenuClose}>Configuracion de cuenta</MenuItem></NavLink>
-            <NavLink to={"/"}><MenuItem onClick={DeleteStateLogin}>Cerrar sesión</MenuItem></NavLink>
+            <NavLink className="link-menu-extra-options" to={"/perfil"}><MenuItem onClick={handleMenuClose}>Perfil, {localStorage.getItem('usuario')}</MenuItem></NavLink>
+            <NavLink className="link-menu-extra-options" to={"/configuration"}><MenuItem onClick={handleMenuClose}>Configuracion de cuenta</MenuItem></NavLink>
+            <NavLink className="link-menu-extra-options" to={"/"}><MenuItem onClick={DeleteStateLogin}>Cerrar sesión</MenuItem></NavLink>
         </Menu>
     );
 
@@ -188,7 +188,7 @@ function MenuHeaderLoginSearch() {
                     aria-haspopup="true"
                     color="inherit"
                 >
-                    <AccountCircle />
+                    <MoreVertIcon />
                 </IconButton>
                 <p>Profile</p>
             </MenuItem>
@@ -235,7 +235,7 @@ function MenuHeaderLoginSearch() {
                             onClick={handleProfileMenuOpen}
                             color="inherit"
                         >
-                            <AccountCircle />
+                            <MoreVertIcon />
                         </IconButton>
                     </div>
                     <div className={classes.sectionMobile}>
@@ -247,7 +247,7 @@ function MenuHeaderLoginSearch() {
                             onClick={handleProfileMenuOpen}
                             color="inherit"
                         >
-                            <AccountCircle />
+                            <MoreVertIcon />
                         </IconButton>
                     </div>
                 </Toolbar>
