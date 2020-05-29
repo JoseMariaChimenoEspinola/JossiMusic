@@ -1,5 +1,7 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { SetUserState } from '../localstorage/states';
+
+import { storage } from '../firebase/config';
 
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
@@ -60,22 +62,22 @@ function LoginForm() {
     });
 
 
-    async function checkUserApi(){
-        const res = await fetch('/api/login/' + usuario +'/'+contra,{
+    async function checkUserApi() {
+        const res = await fetch('/api/login/' + usuario + '/' + contra, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             },
         })
         const data = res['status'];
-        if (data == 200){
+        if (data == 200) {
             document.getElementById('alert-error-login').style.display = "none";
             SetUserState("homelogin", usuario);
             window.location.reload(false);
-        }else{
+        } else {
             document.getElementById('alert-error-login').style.display = "block";
         }
-        
+
         console.log(data);
     }
 
@@ -90,16 +92,16 @@ function LoginForm() {
 
 
     return (
-            <div className={classes.margin}>
+        <div className={classes.margin}>
             <Grid container spacing={1} alignItems="flex-end">
                 <Grid item>
                     <AccountCircle />
                 </Grid>
                 <Grid item>
-                    <TextField id="input-with-icon-grid" label="Nombre de usuario" value={usuario} onChange={e => setUsuario(e.target.value)}/>
+                    <TextField id="input-with-icon-grid" label="Nombre de usuario" value={usuario} onChange={e => setUsuario(e.target.value)} />
                 </Grid>
             </Grid>
-            
+
             <FormControl className={clsx(classes.margin, classes.textField)}>
                 <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
                 <Input
@@ -125,14 +127,40 @@ function LoginForm() {
                     <Alert severity="error">El usuario o la contraseña no son correctos</Alert>
                 </div>
             </FormControl>
-            
-            </div>
+
+        </div>
     );
 }
 
 function RegistroForm() {
     const classes = useStyles();
 
+    const [urlPhoto, setUrlPhoto] = useState('');
+    function handlePhoto(event) {
+        var file = event.target.files[0];
+
+        var namefile = String(file.name);
+        var typefile = String(file.type);
+        var blob = new Blob([file], { type: typefile });//convierto el archivo a un blob con el tipo de archivo dinamicamente.
+
+        const uploadSong = storage.ref(`fotosperfil/${namefile}`).put(blob);
+        uploadSong.on(
+            "state_changed",
+            snapshot => {
+                /*const progress = Math.round(
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                );
+                setProgressSong(progress);*/
+            },
+            error => {
+                console.log(error);
+            },
+            () => {
+                storage.ref("fotosperfil").child(namefile).getDownloadURL().then(url => { setUrlPhoto(url); });
+            }
+        );
+            console.log(urlPhoto);
+    }
     const [usuario, setUsuario] = useState('');
     const [email, setEmail] = useState('');
     const [fecha, setFecha] = useState('');
@@ -143,7 +171,9 @@ function RegistroForm() {
 
     async function RegistrarApi(e) {
         e.preventDefault();
-        
+
+        var check;
+
         const res = await fetch('/api/register', {
             method: 'POST',
             headers: {
@@ -155,19 +185,19 @@ function RegistroForm() {
                 fecha,
                 contra,
                 genero,
-
+                urlPhoto
             })
-        })
-        const data = res['status'];
-        if (data == 200) {
+        }).then(resp => resp.text()).then(data => check = data);
+
+        if (check != 'True') {
             document.getElementById('alert-error-regis').style.display = "block";
             document.getElementById('alert-newuser-regis').style.display = "none";
         } else {
             document.getElementById('alert-newuser-regis').style.display = "block";
             document.getElementById('alert-error-regis').style.display = "none";
         }
-        console.log(data);
-        
+        console.log(check);
+
     }
 
     const handleClickShowPassword = () => {
@@ -181,65 +211,66 @@ function RegistroForm() {
     return (
         <div className={classes.margin}>
             <form onSubmit={RegistrarApi} className={classes.margin}>
-            <Grid container spacing={1} alignItems="flex-end">
-                <Grid item>
-                    <AccountCircle />
+                <input type="file" accept="image/*" onChange={handlePhoto} required></input>
+                <Grid container spacing={1} alignItems="flex-end">
+                    <Grid item>
+                        <AccountCircle />
+                    </Grid>
+                    <Grid item>
+                        <TextField id="input-with-icon-grid" label="Nombre de usuario" onChange={e => setUsuario(e.target.value)} />
+                    </Grid>
                 </Grid>
-                <Grid item>
-                    <TextField id="input-with-icon-grid" label="Nombre de usuario" onChange={e => setUsuario(e.target.value)}/>
+                <Grid container spacing={1} alignItems="flex-end">
+                    <Grid item>
+                        <MailOutlineIcon />
+                    </Grid>
+                    <Grid item>
+                        <TextField type="email" id="input-with-icon-grid" label="Correo Electronico" onChange={e => setEmail(e.target.value)} />
+                    </Grid>
                 </Grid>
-            </Grid>
-            <Grid container spacing={1} alignItems="flex-end">
-                <Grid item>
-                    <MailOutlineIcon />
+                <Grid container spacing={1} alignItems="flex-end">
+                    <Grid item>
+                        <DateRangeIcon />
+                    </Grid>
+                    <Grid item>
+                        <Input id="Birthday" type="date" className="date-input" onChange={e => setFecha(e.target.value)} required />
+                    </Grid>
                 </Grid>
-                <Grid item>
-                    <TextField type="email" id="input-with-icon-grid" label="Correo Electronico" onChange={e => setEmail(e.target.value)}/>
-                </Grid>
-            </Grid>
-            <Grid container spacing={1} alignItems="flex-end">
-                <Grid item>
-                    <DateRangeIcon />
-                </Grid>
-                <Grid item>
-                    <Input id="Birthday" type="date" className="date-input" onChange={e => setFecha(e.target.value)} required/>
-                </Grid>
-            </Grid>
-            <FormControl className={clsx(classes.margin, classes.textField)}>
-                <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
-                <Input
-                    id="standard-adornment-password"
-                    type={contra.showPassword ? 'text' : 'password'}
-                    value={contra.password}
-                    onChange={e => setContra(e.target.value)}
-                    endAdornment={
-                        <InputAdornment position="end">
-                            <IconButton
-                                aria-label="toggle password visibility"
-                                onClick={handleClickShowPassword}
-                                onMouseDown={handleMouseDownPassword}
-                            >
-                                {contra.showPassword ? <Visibility /> : <VisibilityOff />}
-                            </IconButton>
-                        </InputAdornment>
-                    }
-                />
-            </FormControl>
-            <p className="cuestions-form-regis">¿Que tipo de musica te gusta?</p>
-            <FormControl className={classes.selector}>
-                <InputLabel id="demo-simple-select-label">Género</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={genero}
-                    onChange={e => setGen(e.target.value)}
-                >
-                    <MenuItem value={"EDM"}>EDM</MenuItem>
-                    <MenuItem value={"Dance"}>Dance</MenuItem>
-                    <MenuItem value={"House"}>House</MenuItem>
-                </Select>
-            </FormControl>
-            <Button type="submit" variant="contained" color="secondary" >Registrar</Button>
+                <FormControl className={clsx(classes.margin, classes.textField)}>
+                    <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+                    <Input
+                        id="standard-adornment-password"
+                        type={contra.showPassword ? 'text' : 'password'}
+                        value={contra.password}
+                        onChange={e => setContra(e.target.value)}
+                        endAdornment={
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword}
+                                    onMouseDown={handleMouseDownPassword}
+                                >
+                                    {contra.showPassword ? <Visibility /> : <VisibilityOff />}
+                                </IconButton>
+                            </InputAdornment>
+                        }
+                    />
+                </FormControl>
+                <p className="cuestions-form-regis">¿Que tipo de musica te gusta?</p>
+                <FormControl className={classes.selector}>
+                    <InputLabel id="demo-simple-select-label">Género</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={genero}
+                        onChange={e => setGen(e.target.value)}
+                    >
+                        <MenuItem value={"EDM"}>EDM</MenuItem>
+                        <MenuItem value={"Dance"}>Dance</MenuItem>
+                        <MenuItem value={"House"}>House</MenuItem>
+                    </Select>
+                </FormControl>
+                <Button type="submit" variant="contained" color="secondary" >Registrar</Button>
                 <div id="alert-error-regis">
                     <Alert severity="error">Esta cuenta ya existe</Alert>
                 </div>
@@ -251,4 +282,4 @@ function RegistroForm() {
     );
 }
 
-export {LoginForm, RegistroForm};
+export { LoginForm, RegistroForm };

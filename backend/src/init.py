@@ -1,4 +1,4 @@
-activate_this_file = "/var/www/html/JossicMusic/backend/venv/bin/activate_this.py"
+activate_this_file = "/var/www/html/JossiMusic/backend/venv/bin/activate_this.py"
 with open (activate_this_file) as _file:
     exec(_file.read(), dict(__file__=activate_this_file))
 

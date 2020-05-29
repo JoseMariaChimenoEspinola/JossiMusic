@@ -1,5 +1,4 @@
-import React from 'react';
-import { DeleteStateLogin, SetState } from '../localstorage/states';
+import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { fade, makeStyles } from '@material-ui/core/styles';
@@ -8,7 +7,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -20,6 +18,7 @@ import Button from '@material-ui/core/Button';
 import logo from '../img/logo.png';
 
 import clsx from 'clsx';
+
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
@@ -30,7 +29,12 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
-import {LoginDialog} from './Dialogs';
+import { LoginDialog } from './Dialogs';
+
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+ /* Grids */
+import GridList from '@material-ui/core/GridList';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -114,7 +118,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-function MenuHeader(){
+function MenuHeader() {
     return (
         <AppBar position="static">
             <Toolbar>
@@ -122,7 +126,7 @@ function MenuHeader(){
                 <Typography variant="h6" className={useStyles.title}>
                     <img src={logo} className="logo-menu" />
                 </Typography>
-                <LoginDialog/>
+                <LoginDialog />
             </Toolbar>
         </AppBar>
     );
@@ -166,8 +170,9 @@ function MenuHeaderLoginSearch() {
         >
             <NavLink className="link-menu-extra-options" to={"/perfil"}><MenuItem onClick={handleMenuClose}>Perfil, {localStorage.getItem('usuario')}</MenuItem></NavLink>
             <NavLink className="link-menu-extra-options" to={"/configuration"}><MenuItem onClick={handleMenuClose}>Configuracion de cuenta</MenuItem></NavLink>
-            <NavLink className="link-menu-extra-options" to={"/"}><MenuItem onClick={DeleteStateLogin}>Cerrar sesión</MenuItem></NavLink>
+            <NavLink className="link-menu-extra-options" to="/" onClick={() => { localStorage.clear(); }}><MenuItem>Cerrar sesión</MenuItem></NavLink>
         </Menu>
+
     );
 
     const mobileMenuId = 'primary-search-account-menu-mobile';
@@ -195,6 +200,112 @@ function MenuHeaderLoginSearch() {
         </Menu>
     );
 
+
+    /* Filters */
+    const [songscheck, setSongCheck] = useState(true);
+    function hideShowSongs(event) {
+        setSongCheck(event.target.checked);
+        { songscheck == true ? document.getElementById('canciones').style.display = "none" : document.getElementById('canciones').style.display = "flex" }
+        { songscheck == true ? document.getElementById('titulo-canciones').style.display = "none" : document.getElementById('titulo-canciones').style.display = "flex" }
+        { songscheck == true ? document.getElementsByClassName('container-grids')[0].style.height = "0px" : document.getElementsByClassName('container-grids')[0].style.height = "210px"}
+    }
+
+    const [artistcheck, setArtistCheck] = useState(true);
+    function hideShowArtists(event) {
+        setArtistCheck(event.target.checked);
+        { artistcheck == true ? document.getElementById('artistas').style.display = "none" : document.getElementById('artistas').style.display = "flex" }
+        { artistcheck == true ? document.getElementById('titulo-artistas').style.display = "none" : document.getElementById('titulo-artistas').style.display = "flex" }
+        { artistcheck == true ? document.getElementsByClassName('container-grids')[1].style.height = "0px" : document.getElementsByClassName('container-grids')[1].style.height = "210px" }
+    }
+
+    function setSongLocal(id) {
+        localStorage.setItem("actualSong", id);
+    }
+
+    async function showBuscador() {
+        var songs = "";
+        var artists = "";
+        var value = document.getElementById('text-input-buscador').value;
+
+        var canciones = new Array;
+        var call = await fetch('/api/getCancionBuscador/' + value).then(resp => resp.json()).then(data => {
+            if (data.length != 0) {
+            for (let x of data) {
+                canciones.push(x);
+            }
+                return 'ok'
+            } else { return 'false' }   
+        });
+
+        var artistas = new Array;
+        var call2 = await fetch('/api/getArtistaBuscador/' + value).then(resp => resp.json()).then(data => {
+            if(data.length != 0){
+                for (let x of data) {
+                    artistas.push(x);
+                }
+                return 'ok'
+            }else{return 'false'}    
+        });
+
+        /* Comprueba si hay resultados de las llamadas o no, si hay, mostrara el buscado, si no, no. */
+        if (call == 'ok' || call2 == 'ok') {
+            document.getElementById('buscador').setAttribute("class", "style-searcher-content-selected");
+            document.getElementById('form-buscador').style.display = "block";
+
+
+
+            /* Oculta las diferentes opciones del buscador progresivamente, de tal manera que cuando el usuario escriba algo,
+             muestre unicamente lo que se encuentre, si no hay canciones con estos resultados, el especio desaparecera */
+            if (canciones.length != 0){
+                for (var i = 0; i < canciones.length; i++) {
+                    document.getElementsByClassName('container-grids')[0].style.height = "210px"
+                    document.getElementById('titulo-canciones').style.display = "block"
+
+                    songs += '<a onclick="setSongLocal(' + canciones[i]._id +')"><div class="div-contenedor-resultados">';
+                    songs += '<img class="foto-contenedor-resultados" src="' + canciones[i].dircaratula + '"></img>';
+                    songs += '<p><span>' + canciones[i].titulo + '<span></p>';
+                    songs += '<p>' + canciones[i].artista + '</p>';
+                    songs += '</div></a>';
+                    
+                    document.getElementById('canciones').innerHTML = songs;
+                }
+            }else{
+                document.getElementById('canciones').innerHTML = "<h2></h2>";
+                document.getElementById('titulo-canciones').style.display = "none"
+                document.getElementsByClassName('container-grids')[0].style.height = "0px"
+            }
+            
+
+
+
+            if (artistas.length != 0) {
+            for (var i = 0; i < artistas.length; i++) {
+                document.getElementsByClassName('container-grids')[1].style.height = "210px"
+                document.getElementById('titulo-artistas').style.display = "block"
+
+                artists += '<div class="div-contenedor-resultados">';
+                artists += '<img class="foto-contenedor-resultados" src="' + artistas[i].foto + '"></img>';
+                artists += '<p><span>' + artistas[i].usuario + '<span></p>';
+                artists += '</div>';
+                document.getElementById('artistas').innerHTML = artists;
+            }
+            } else {
+                document.getElementById('artistas').innerHTML = "";
+                document.getElementById('titulo-artistas').style.display = "none"
+                document.getElementsByClassName('container-grids')[1].style.height = "0px"
+            }
+
+
+        } else {
+            /* Permite ocultar todo el buscador en caso de que no exista ningun restultado */
+            document.getElementById('buscador').setAttribute("class", "style-searcher-content");
+            document.getElementById('form-buscador').style.display = "none";
+            document.getElementById('canciones').innerHTML = "";
+            document.getElementById('artistas').innerHTML = "";
+        }
+    }
+    
+
     return (
         <div className={classes.grow}>
             <AppBar position="static">
@@ -213,7 +324,9 @@ function MenuHeaderLoginSearch() {
                                 root: classes.inputRoot,
                                 input: classes.inputInput,
                             }}
+                            id="text-input-buscador"
                             inputProps={{ 'aria-label': 'search' }}
+                            onInput={showBuscador}
                         />
                     </div>
                     <div className={classes.grow} />
@@ -226,7 +339,7 @@ function MenuHeaderLoginSearch() {
                         Subir
                     </Button></NavLink>
                     <div className={classes.sectionDesktop}>
-                        
+
                         <IconButton
                             edge="end"
                             aria-label="account of current user"
@@ -254,11 +367,57 @@ function MenuHeaderLoginSearch() {
             </AppBar>
             {renderMobileMenu}
             {renderMenu}
+            <div id="buscador" className="style-searcher-content">
+                <div className="data-buscador-container">
+                    <div id="form-buscador">
+                        <h1 id="titulo-buscador"></h1>
+                        <h4>Filtros:</h4>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    name="checkedB"
+                                    color="primary"
+                                    onChange={hideShowSongs}
+                                    checked={songscheck}
+                                />
+                            }
+                            label="Canciones"
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    name="checkedB"
+                                    color="primary"
+                                    onChange={hideShowArtists}
+                                    checked={artistcheck}
+                                />
+                            }
+                            label="Artistas"
+                        />
+                        <Divider /><br></br>
+                        <h6>Resultados:</h6>
+                        <h2 id="titulo-canciones">Canciones</h2>
+                        <div className="container-grids">
+                            <GridList className={"gridlist"} cols={2.5}>
+                                <div id="canciones"></div>
+                            </GridList>
+                        </div>
+                        
+                        <h2 id="titulo-artistas">Artistas</h2>
+                        <div className="container-grids">
+                            <GridList className={"gridlist"} cols={2.5}>
+                                <div id="artistas"></div>
+                            </GridList>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
 
-function MenuOpciones(){
+function MenuOpciones() {
     const classes = useStyles();
     const [state, setState] = React.useState({
         left: false,
@@ -283,7 +442,7 @@ function MenuOpciones(){
         >
             <List>
                 <ListItem button>
-                    <ListItemIcon><ArrowBackIosIcon onClick={toggleDrawer(anchor, false)}/></ListItemIcon>
+                    <ListItemIcon><ArrowBackIosIcon onClick={toggleDrawer(anchor, false)} /></ListItemIcon>
                     <NavLink to="/"><img src={logo} className="logo-menu" /></NavLink>
                 </ListItem>
             </List>
@@ -308,11 +467,11 @@ function MenuOpciones(){
                         <Drawer anchor={anchor} open={state[anchor]} onClose={toggleDrawer(anchor, false)}>
                             {list(anchor)}
                         </Drawer>
-                    </IconButton> 
+                    </IconButton>
                 </React.Fragment>
             ))}
         </div>
     );
 }
 
-export { MenuHeader, MenuHeaderLoginSearch};
+export { MenuHeader, MenuHeaderLoginSearch };

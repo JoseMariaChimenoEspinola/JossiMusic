@@ -1,17 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router,Switch, Route, withRouter} from 'react-router-dom';
-import {Home, HomeLogin} from './App';
+import { BrowserRouter as Router, Switch, Route, withRouter } from 'react-router-dom';
+import { Home, HomeLogin } from './App';
 import FormUploader from './components/uploadfile';
 import { GetStateLogin } from './localstorage/states';
-import { PerfilUsuario, ParametrosUsuario} from './components/Perfil';
+import { PerfilUsuario, ParametrosUsuario } from './components/Perfil';
 import PaginaCancion from './components/songpage';
+import Start from './components/reproductor';
 
-
+var check = GetStateLogin();
 
 function ShowHidePages() {
-  let check = GetStateLogin();
-
   if (check == 'homelogin') {
     return <HomeLogin />;
   } else {
@@ -32,3 +31,21 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
+function ShowHideReproductor() {
+
+  let check = GetStateLogin();
+
+  if (check == 'homelogin') {
+    return <Start />
+  } else {
+    return null;
+  }
+
+}
+
+ReactDOM.render(
+  <div>
+    <ShowHideReproductor />
+  </div>,
+  document.getElementById('media')
+);
