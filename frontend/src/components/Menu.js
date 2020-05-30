@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import Start from './reproductor';
 
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -33,7 +34,7 @@ import { LoginDialog } from './Dialogs';
 
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
- /* Grids */
+/* Grids */
 import GridList from '@material-ui/core/GridList';
 
 const useStyles = makeStyles((theme) => ({
@@ -207,7 +208,7 @@ function MenuHeaderLoginSearch() {
         setSongCheck(event.target.checked);
         { songscheck == true ? document.getElementById('canciones').style.display = "none" : document.getElementById('canciones').style.display = "flex" }
         { songscheck == true ? document.getElementById('titulo-canciones').style.display = "none" : document.getElementById('titulo-canciones').style.display = "flex" }
-        { songscheck == true ? document.getElementsByClassName('container-grids')[0].style.height = "0px" : document.getElementsByClassName('container-grids')[0].style.height = "210px"}
+        { songscheck == true ? document.getElementsByClassName('container-grids')[0].style.height = "0px" : document.getElementsByClassName('container-grids')[0].style.height = "210px" }
     }
 
     const [artistcheck, setArtistCheck] = useState(true);
@@ -218,10 +219,6 @@ function MenuHeaderLoginSearch() {
         { artistcheck == true ? document.getElementsByClassName('container-grids')[1].style.height = "0px" : document.getElementsByClassName('container-grids')[1].style.height = "210px" }
     }
 
-    function setSongLocal(id) {
-        localStorage.setItem("actualSong", id);
-    }
-
     async function showBuscador() {
         var songs = "";
         var artists = "";
@@ -230,21 +227,21 @@ function MenuHeaderLoginSearch() {
         var canciones = new Array;
         var call = await fetch('/api/getCancionBuscador/' + value).then(resp => resp.json()).then(data => {
             if (data.length != 0) {
-            for (let x of data) {
-                canciones.push(x);
-            }
+                for (let x of data) {
+                    canciones.push(x);
+                }
                 return 'ok'
-            } else { return 'false' }   
+            } else { return 'false' }
         });
 
         var artistas = new Array;
         var call2 = await fetch('/api/getArtistaBuscador/' + value).then(resp => resp.json()).then(data => {
-            if(data.length != 0){
+            if (data.length != 0) {
                 for (let x of data) {
                     artistas.push(x);
                 }
                 return 'ok'
-            }else{return 'false'}    
+            } else { return 'false' }
         });
 
         /* Comprueba si hay resultados de las llamadas o no, si hay, mostrara el buscado, si no, no. */
@@ -256,39 +253,46 @@ function MenuHeaderLoginSearch() {
 
             /* Oculta las diferentes opciones del buscador progresivamente, de tal manera que cuando el usuario escriba algo,
              muestre unicamente lo que se encuentre, si no hay canciones con estos resultados, el especio desaparecera */
-            if (canciones.length != 0){
+            if (canciones.length != 0) {
                 for (var i = 0; i < canciones.length; i++) {
+                    var id = canciones[i]._id;
+                    var titulo = canciones[i].titulo;
+                    var url = canciones[i].dircancion;
                     document.getElementsByClassName('container-grids')[0].style.height = "210px"
                     document.getElementById('titulo-canciones').style.display = "block"
 
-                    songs += '<a onclick="setSongLocal(' + canciones[i]._id +')"><div class="div-contenedor-resultados">';
+                    songs += '<a value="'+id+'" class="link-song"><div class="div-contenedor-resultados">';
                     songs += '<img class="foto-contenedor-resultados" src="' + canciones[i].dircaratula + '"></img>';
-                    songs += '<p><span>' + canciones[i].titulo + '<span></p>';
+                    songs += '<p><span>' + titulo + '<span></p>';
                     songs += '<p>' + canciones[i].artista + '</p>';
                     songs += '</div></a>';
-                    
+
                     document.getElementById('canciones').innerHTML = songs;
+                    document.getElementsByClassName('link-song')[i].onclick = function () {
+                        Start(id);
+                    }
+                    
                 }
-            }else{
+            } else {
                 document.getElementById('canciones').innerHTML = "<h2></h2>";
                 document.getElementById('titulo-canciones').style.display = "none"
                 document.getElementsByClassName('container-grids')[0].style.height = "0px"
             }
-            
+
 
 
 
             if (artistas.length != 0) {
-            for (var i = 0; i < artistas.length; i++) {
-                document.getElementsByClassName('container-grids')[1].style.height = "210px"
-                document.getElementById('titulo-artistas').style.display = "block"
+                for (var i = 0; i < artistas.length; i++) {
+                    document.getElementsByClassName('container-grids')[1].style.height = "210px";
+                    document.getElementById('titulo-artistas').style.display = "block";
 
-                artists += '<div class="div-contenedor-resultados">';
-                artists += '<img class="foto-contenedor-resultados" src="' + artistas[i].foto + '"></img>';
-                artists += '<p><span>' + artistas[i].usuario + '<span></p>';
-                artists += '</div>';
-                document.getElementById('artistas').innerHTML = artists;
-            }
+                    artists += '<div class="div-contenedor-resultados">';
+                    artists += '<img class="foto-contenedor-resultados" src="' + artistas[i].foto + '"></img>';
+                    artists += '<p><span>' + artistas[i].usuario + '<span></p>';
+                    artists += '</div>';
+                    document.getElementById('artistas').innerHTML = artists;
+                }
             } else {
                 document.getElementById('artistas').innerHTML = "";
                 document.getElementById('titulo-artistas').style.display = "none"
@@ -304,7 +308,14 @@ function MenuHeaderLoginSearch() {
             document.getElementById('artistas').innerHTML = "";
         }
     }
-    
+
+    function closeSearcher() {
+        document.getElementById('buscador').setAttribute("class", "style-searcher-content");
+        document.getElementById('form-buscador').style.display = "none";
+        document.getElementById('canciones').innerHTML = "";
+        document.getElementById('artistas').innerHTML = "";
+    }
+
 
     return (
         <div className={classes.grow}>
@@ -327,7 +338,7 @@ function MenuHeaderLoginSearch() {
                             id="text-input-buscador"
                             inputProps={{ 'aria-label': 'search' }}
                             onInput={showBuscador}
-                        />
+                        /><Button variant="contained" color="primary" onClick={showBuscador}>Buscar</Button>
                     </div>
                     <div className={classes.grow} />
                     <NavLink to={"/uploadcontent"}><Button
@@ -370,6 +381,9 @@ function MenuHeaderLoginSearch() {
             <div id="buscador" className="style-searcher-content">
                 <div className="data-buscador-container">
                     <div id="form-buscador">
+                        <div className="icons-searcher">
+                            <Button variant="contained" color="secondary" onClick={closeSearcher}>Cerrar</Button>
+                        </div>
                         <h1 id="titulo-buscador"></h1>
                         <h4>Filtros:</h4>
                         <FormControlLabel
@@ -402,14 +416,14 @@ function MenuHeaderLoginSearch() {
                                 <div id="canciones"></div>
                             </GridList>
                         </div>
-                        
+
                         <h2 id="titulo-artistas">Artistas</h2>
                         <div className="container-grids">
                             <GridList className={"gridlist"} cols={2.5}>
                                 <div id="artistas"></div>
                             </GridList>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>

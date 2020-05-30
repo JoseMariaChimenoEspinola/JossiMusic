@@ -31,21 +31,22 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-function ShowHideReproductor() {
+export default function ShowHideReproductor() {
 
-  let check = GetStateLogin();
+  var check = GetStateLogin();
 
   if (check == 'homelogin') {
-    return <Start />
+    document.getElementById('media').style.display = "fixed";
   } else {
-    return null;
+    document.getElementById('media').style.display = "none";
   }
-
+  return '';
 }
 
 ReactDOM.render(
   <div>
     <ShowHideReproductor />
+    <Start/>
   </div>,
   document.getElementById('media')
 );

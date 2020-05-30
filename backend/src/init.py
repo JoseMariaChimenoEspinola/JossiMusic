@@ -86,7 +86,7 @@ def uploadSong():
 def getCancionBuscador(info):
 
     songs = []
-    search = dbfiles.find({'titulo': {"$regex": '^'+info}})
+    search = dbfiles.find({'titulo': {"$regex": '^'+info, '$options': 'i'}})
 
     for doc in search:
         songs.append({
@@ -107,7 +107,7 @@ def getCancionBuscador(info):
 def getArtistaBuscador(info):
 
     arts = []
-    search = db.find({'usuario': {"$regex": '^'+info}})
+    search = db.find({'usuario': {"$regex": '^'+info, '$options': 'i'}})
 
     for doc in search:
         arts.append({
@@ -122,20 +122,13 @@ def getArtistaBuscador(info):
 @app.route('/api/getCancionPorId/<id>', methods=['GET'])
 def getCancionPorId(id):
 
-    song = dbfiles.find_one({'_id': ObjectId(id)}, {
-        '_id': 1,
-        'titulo': 1,
-        'artista': 1,
-        'genero': 1,
-        'dircancion': 1,
-        'dircaratula': 1,
-        'fecha': 1,
-        'reproducciones': 1,
-        'likes': 1
-    })
+    data = str(id)
 
+    song = dbfiles.find_one({'_id': ObjectId(data)}, {'titulo': 1,'artista': 1,'genero': 1,'dircancion': 1,'dircaratula': 1,'fecha': 1,'reproducciones': 1,'likes': 1})
 
-    return jsonify(song)
+    sys.stderr.write(str(song))
+
+    return json.dumps(song , default=str)
 
 #get music users
 @app.route('/api/getMusic/<artista>', methods=['GET'])
