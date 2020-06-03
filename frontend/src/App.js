@@ -2,12 +2,22 @@ import React, { useState, useEffect, Suspense } from 'react';
 import AudioPlayer from 'material-ui-audio-player';
 import AOS from 'aos';
 
+import { NavLink } from 'react-router-dom';
+
 import Divider from '@material-ui/core/Divider';
 import './App.css';
 import { MenuHeader, MenuHeaderLoginSearch } from './components/Menu.js';
 import ImageArtists from './components/avatars';
 import { ResponsiveFoto, Carousel, InfoSectionHome, ElvisFoto, LoginRegisHome } from './components/homeelements.js';
 import { CarouselInicioLogin } from './components/Slider';
+import Footer from './components/footer';
+
+
+import GridList from '@material-ui/core/GridList';
+
+/* Reproductor */
+import Start from './components/reproductor';
+import { Button } from '@material-ui/core';
 
 class Home extends React.Component {
   render() {
@@ -49,11 +59,97 @@ class HomeLogin extends React.Component {
     AOS.init({
       duration: 1200,
     });
+    this.state = {"gen" : ""};
   }
+
   componentWillReceiveProps() {
     AOS.refresh();
   }
+
   render() {
+    // comprueba el genero actual
+    var gen;
+    var listStyle = new Array;
+    var listStyleArtists = new Array;
+
+    function checkGen() {
+      fetch('/api/checkStyleMusic/' + localStorage.getItem('usuario')).then(resp => resp.json()).then(data => gen = data['genero']);
+      setTimeout(() => {
+        document.getElementsByClassName('style-selected-home')[0].innerHTML = gen;
+      }, 100);
+    }
+
+    setTimeout(() => {
+      checkGen();
+    }, 100);
+
+
+    //Get canciones en home
+    setTimeout(function () {
+      fetch('/api/getMusicStyleHome/' + gen).then(resp => resp.json()).then(data => {
+        for (let x of data) {
+          listStyle.push(x);
+        }
+      });
+
+      setTimeout(function () {
+        var data = "";
+        
+        if (listStyle.length != 0){
+          for (var i = 0; i < listStyle.length; i++) {
+            data += '<div class="div-contenedor-resultados">';
+            data += '<a value="' + listStyle[i]._id + '" class="link-song" id="link-song-' + i + '"><img class="foto-contenedor-resultados" src="' + listStyle[i].dircaratula + '"></img>';
+            data += '<p>' + listStyle[i].titulo + '</p>';
+            data += '<p>' + listStyle[i].genero + '</p>';
+            data += '<p>' + listStyle[i].fecha + '</p></a>';
+            data += '<a href="/cancion?song=' + listStyle[i]._id +'"><Button class="button-songs">Ver Mas</Button></a>';
+            data += '</div>';
+            document.getElementById('songs-style-home').innerHTML = data;
+          }
+          for (var i = 0; i < listStyle.length; i++) {
+            (function (i) {
+              var id = listStyle[i]._id;
+              document.getElementById('link-song-' + i).onclick = function (event) { event.preventDefault(); Start(id) };
+            })(i);
+          }
+        }else{
+          document.getElementById('songs-style-home').innerHTML = "¿Vaya!, no hay contenido con este estilo.";
+        }
+        
+
+      }, 900);
+    }, 800);
+
+    //Get artista en home
+    setTimeout(function () {
+      fetch('/api/getArtistsStyleHome/' + gen).then(resp => resp.json()).then(data => {
+        for (let x of data) {
+          listStyleArtists.push(x);
+        }
+      });
+
+      setTimeout(function () {
+        var data = "";
+
+        if (listStyleArtists.length != 0) {
+          for (var i = 0; i < listStyleArtists.length; i++) {
+            data += '<div class="div-contenedor-resultados">';
+            data += '<img class="foto-contenedor-resultados" src="' + listStyleArtists[i].foto + '"></img>';
+            data += '<p>' + listStyleArtists[i].usuario + '</p>';
+            data += '<p>' + listStyleArtists[i].genero + '</p>';
+            data += '<a href="/perfilext?artist=' + listStyleArtists[i]._id + '"><Button class="button-songs">Descubrir</Button></a>';
+            data += '</div>';
+            document.getElementById('artists-style-home').innerHTML = data;
+          }
+        } else {
+          document.getElementById('artists-style-home').innerHTML = "¿Vaya!, no hay artistas con este estilo.";
+        }
+
+
+      }, 900);
+    }, 800);
+
+
     return (
       <div id="wrapper">
         <header>
@@ -63,51 +159,21 @@ class HomeLogin extends React.Component {
           <section className="content">
             <CarouselInicioLogin />
             <Divider className="divider" />
-            <section className="masescuchadas-inicio">
-              <h2>Mas escuchadas (Top 5)</h2>
-              {function () {
-                let rows = [];
-                for (let i = 0; i < 5; i++) {
-                  rows.push(<div className="lista-inicio-best">
-                    <AudioPlayer
-                      controls
-                      elevation={1}
-                      width="100%"
-                      variation="default"
-                      spacing={3}
-                      order="standart"
-                      preload="auto"
-                      src={"https://firebasestorage.googleapis.com/v0/b/jossicstorage.appspot.com/o/songs%2FDaddy%20Yankee%20-%20Gasolina%20(Blasterjaxx%20Bootleg)%20%5BShort%20Edit%20Dimitri%20Vegas%20%26%20Like%20Mike%20Tomorrowland%202016%5D.mp3?alt=media&token=f2965dc1-56f9-4434-bda3-84823324254f"}
-                    />
-                  </div>);
-                }
-                return rows;
-              }()}
+            <section className="estilo-inicio">
+              <h2>Novedades de <span className="style-selected-home"></span></h2>
+              <Divider/><br></br>
+              <h3 className="titulo-cancion-detalles">Canciones</h3>
+              <GridList cols={3}>
+                <div id="songs-style-home"></div>
+              </GridList>
+              <h3 className="titulo-cancion-detalles">Artistas</h3>
+              <GridList cols={3}>
+                <div id="artists-style-home"></div>
+              </GridList>
             </section>
           </section>
-          
-          <footer className="footer-style">
-            <div className="footer-container-style">
-              <h5>Localización:</h5>
-              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d23943.579565143267!2d2.1466909604869464!3d41.39694767283369!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12a4a2620433a381%3A0x85f06b76506107d5!2smicroFusa%20Tienda%20Barcelona!5e0!3m2!1ses!2ses!4v1590833645079!5m2!1ses!2ses" width="250" height="200" frameborder="0" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
-            </div>
 
-            <div className="footer-container-style">
-              <h5>Politica de privacidad</h5>
-              <ol>
-                <li>Politica de privacidad</li>
-                <li>Términos y condiciones de uso</li>
-                <li>Politica de Local Storage</li>
-              </ol>
-            </div>
-
-            <div className="footer-container-style">
-              <h5>Contacto</h5>
-              <p><span>Email:</span> <a href="mailto: josechu13048@gmail.com">josechu13048@gmail.com</a></p>
-              <p><span>Telefono:</span> <a href="tel: 666898999">666898999</a></p>
-            </div>
-            
-          </footer>
+          <Footer />
         </div>
       </div >);
   }

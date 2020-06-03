@@ -63,22 +63,28 @@ function LoginForm() {
 
 
     async function checkUserApi() {
+
         const res = await fetch('/api/login/' + usuario + '/' + contra, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             },
-        })
-        const data = res['status'];
-        if (data == 200) {
+        }).then(resp => resp.json()).then(data => {
+            return data;
+        }).catch(function() {
+            document.getElementById('alert-error-login').style.display = "block";
+            setTimeout(() => { document.getElementById('alert-error-login').style.display = 'none' }, 3000);
+        });
+
+        if (res != null) {
             document.getElementById('alert-error-login').style.display = "none";
-            SetUserState("homelogin", usuario);
+            SetUserState("homelogin", res['_id']);
             window.location.reload(false);
         } else {
             document.getElementById('alert-error-login').style.display = "block";
+            setTimeout(() => { document.getElementById('alert-error-login').style.display = 'none' }, 3000);
         }
 
-        console.log(data);
     }
 
     const handleClickShowPassword = () => {

@@ -139,6 +139,7 @@ export default function FormUploader() {
         setSong('');
         var namefile = String(song.name);
         storage.ref(`songs/${namefile}`).delete();
+        setProgressSong(0);
     }
     
     //Subir caratula a Firebase
@@ -177,6 +178,7 @@ export default function FormUploader() {
         setPhoto('');
         var namefile = String(photo.name);
         storage.ref(`songs/${namefile}`).delete();
+        setProgressCarat(0);
     }
 
     const [titulo, setTitulo] = useState('');
@@ -304,7 +306,7 @@ export default function FormUploader() {
                         <Button variant="contained" color="secondary" className={classes.spacebetweenbuttons} onClick={() => { localStorage.setItem('state', 'homelogin'); window.location.reload(false);}}>
                             Salir
                         </Button>
-                        <Button variant="contained" color="primary" type="submit">
+                        <Button variant="contained" color="primary" type="submit" disabled={progrescarat == 100 && progressong == 100 ? false : true}>
                             Subir
                         </Button>
                     </div>

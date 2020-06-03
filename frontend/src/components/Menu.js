@@ -136,6 +136,7 @@ function MenuHeader() {
 function MenuHeaderLoginSearch() {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [usuario, setUsuario] = useState('');
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
     const isMenuOpen = Boolean(anchorEl);
@@ -158,6 +159,15 @@ function MenuHeaderLoginSearch() {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
+    fetch('/api/getDataUser/' + localStorage.getItem('usuario'), {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    }).then(resp => resp.json()).then(data => {
+        setUsuario(data['usuario']);
+    });
+    
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
         <Menu
@@ -169,7 +179,7 @@ function MenuHeaderLoginSearch() {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <NavLink className="link-menu-extra-options" to={"/perfil"}><MenuItem onClick={handleMenuClose}>Perfil, {localStorage.getItem('usuario')}</MenuItem></NavLink>
+            <NavLink className="link-menu-extra-options" to={"/perfil"}><MenuItem onClick={handleMenuClose}>Perfil, {usuario}</MenuItem></NavLink>
             <NavLink className="link-menu-extra-options" to={"/configuration"}><MenuItem onClick={handleMenuClose}>Configuracion de cuenta</MenuItem></NavLink>
             <NavLink className="link-menu-extra-options" to="/" onClick={() => { localStorage.clear(); }}><MenuItem>Cerrar sesión</MenuItem></NavLink>
         </Menu>
@@ -261,17 +271,27 @@ function MenuHeaderLoginSearch() {
                     document.getElementsByClassName('container-grids')[0].style.height = "210px"
                     document.getElementById('titulo-canciones').style.display = "block"
 
-                    songs += '<a value="'+id+'" class="link-song"><div class="div-contenedor-resultados">';
-                    songs += '<img class="foto-contenedor-resultados" src="' + canciones[i].dircaratula + '"></img>';
+                    songs += '<div class="div-contenedor-resultados">';
+                    songs += '<a value="' + id + '" class="link-song" id="link-song-' + i + '"><img class="foto-contenedor-resultados" src="' + canciones[i].dircaratula + '"></img>';
                     songs += '<p><span>' + titulo + '<span></p>';
-                    songs += '<p>' + canciones[i].artista + '</p>';
-                    songs += '</div></a>';
+                    songs += '<p>' + canciones[i].artista + '</p></a>';
+                    songs += '<a href="/cancion?song=' + canciones[i]._id + '"><Button class="button-songs">Ver Mas</Button></a>';
+                    songs += '</div>';
+
 
                     document.getElementById('canciones').innerHTML = songs;
-                    document.getElementsByClassName('link-song')[i].onclick = function () {
-                        Start(id);
-                    }
+
+                    (function (i) {
+                        var id = canciones[i]._id;
+                        document.getElementById('link-song-' + i).onclick = function () { Start(id) };
+                    })(i);
                     
+                }
+                for (var i = 0; i < canciones.length; i++) {
+                    (function (i) {
+                        var id = canciones[i]._id;
+                        document.getElementById('link-song-' + i).onclick = function () { Start(id) };
+                    })(i);
                 }
             } else {
                 document.getElementById('canciones').innerHTML = "<h2></h2>";

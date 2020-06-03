@@ -1,8 +1,7 @@
-import React from 'react';
 
-function SetUserState(params, user) {
+function SetUserState(params, id) {
     localStorage.setItem('state',params);
-    localStorage.setItem('usuario', user);
+    localStorage.setItem('usuario', id);
 }
 
 function SetState(params) {

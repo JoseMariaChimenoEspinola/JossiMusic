@@ -5,8 +5,12 @@ import { Home, HomeLogin } from './App';
 import FormUploader from './components/uploadfile';
 import { GetStateLogin } from './localstorage/states';
 import { PerfilUsuario, ParametrosUsuario } from './components/Perfil';
-import PaginaCancion from './components/songpage';
+import {CancionEfecto} from './components/cancion';
+import { ArtistEfecto } from './components/perfilext';
 import Start from './components/reproductor';
+
+
+import { politicadeprovacidad, localstorage} from './politicas/politicaPri';
 
 var check = GetStateLogin();
 
@@ -25,7 +29,10 @@ ReactDOM.render(
       <Route path="/uploadcontent" component={FormUploader}></Route>
       <Route path="/perfil" component={PerfilUsuario}></Route>
       <Route path="/configuration" component={ParametrosUsuario}></Route>
-      <Route path="/cancion" component={PaginaCancion}></Route>
+      <Route path="/cancion" component={CancionEfecto}></Route>
+      <Route path="/perfilext" component={ArtistEfecto}></Route>
+      <Route path="/politicadeprivacidad" component={politicadeprovacidad}></Route>
+      <Route path="/localstorage" component={localstorage}></Route>
     </Switch>
   </Router>,
   document.getElementById('root')

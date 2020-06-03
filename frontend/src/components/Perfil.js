@@ -36,45 +36,61 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
+/* Reproductor */
+import Start from './reproductor';
+
+import GridList from '@material-ui/core/GridList';
 
 function ProfileUser() {
+  const [cancionesSubidas, setCancionesSubidas] = useState(0);
   const artista = localStorage.getItem('usuario');
   const [avatar, setAvatar] = useState('');
+  const [usuario, setUsuario] = useState('');
   var list = new Array;
 
-  const checkUserApi = async () => {
-    await fetch('/api/getMusic/' + artista).then(resp => resp.json()).then(data => {
-      for (let x of data) {
-        list.push(x);
-      }
-    });
-  }
 
   const getAvatar = async () => {
-
-    await fetch('/api/getAvatarPhoto/' + artista, {
+    await fetch('/api/getDataUser/' + artista, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
       },
-    }).then(resp => resp.json()).then(data => setAvatar(data['foto']));
+    }).then(resp => resp.json()).then(data => {
+      setAvatar(data['foto']);
+      setUsuario(data['usuario']);
+    });
+  }
 
+  function setReproductor(id) {
+    Start(id);
   }
 
   setTimeout(function () {
-    checkUserApi();
+    fetch('/api/getMusic/' + localStorage.getItem('usuario')).then(resp => resp.json()).then(data => {
+      for (let x of data) {
+        list.push(x);
+      }
+    });
+    
     setTimeout(function () {
       var data = "";
+      setCancionesSubidas(list.length);
       for (var i = 0; i < list.length; i++) {
-        data += '<div class="div-cancion-unica">';
-        data += '<img class="caratula-preview-perfil" src="' + list[i].dircaratula + '"></img>';
+        data += '<a value="' + list[i]._id + '" class="link-song" id="link-song-' + i + '"><div class="div-contenedor-resultados">';
+        data += '<img class="foto-contenedor-resultados" src="' + list[i].dircaratula + '"></img>';
         data += '<p>' + list[i].titulo + '</p>';
-
         data += '<p>' + list[i].genero + '</p>';
         data += '<p>' + list[i].fecha + '</p>';
-        data += '</div>';
+        data += '</div></a>';
         document.getElementById('songs-container-author').innerHTML = data;
       }
+      for (var i = 0; i < list.length; i++) {
+        (function (i) {
+          var id = list[i]._id;
+          document.getElementById('link-song-' + i).onclick = function () { setReproductor(id) };
+        })(i);
+      }
+
     }, 1100)
   }, 0);
 
@@ -84,37 +100,28 @@ function ProfileUser() {
   }, 0);
 
 
-  const likes = 0;
-  var subs = 0;
-
-  async function addLike() {
-    likes = likes + 1;
-  }
-
   return (
     <div id="wrapper">
       <section className="content">
         <div className="profile-style-container">
-          <div className="container-likes-counter">
-            <h1>{likes} Likes</h1>
-            {/* <ThumbUpIcon id="like" onClick={addLike} /> */}
-          </div>
           <div className="container-avatar-text">
-            <label htmlFor="contained-button-file" className="hoverAvatar"><Avatar alt={localStorage.getItem('usuario')}  id="photo-avatar" src={avatar}/></label>
-            <h5>{localStorage.getItem('usuario')}</h5>
+            <label htmlFor="contained-button-file" className="hoverAvatar"><Avatar alt={localStorage.getItem('usuario')} id="photo-avatar" src={avatar} /></label>
+            <h5>{usuario}</h5>
             <h6>DJs</h6>
           </div>
           <div className="container-subs-counter">
-            <h1>{subs} seguidores</h1>
-            {/* <Button variant="contained" color="primary">
-              Seguir
-              </Button> */}
+            <h4>{cancionesSubidas}<br></br> Canciones</h4>
+            <h4>0<br></br> Seguidores</h4>
+            <h4>0<br></br> Seguidos</h4>
           </div>
         </div>
+        <Divider />
         <div className="profile-style-container">
           <h1>Ultimas subidas</h1>
         </div>
-        <div id="songs-container-author"></div>
+        <GridList cols={2.5}>
+          <div id="songs-container-author"></div>
+        </GridList>
       </section>
     </div>
   );
@@ -122,7 +129,7 @@ function ProfileUser() {
 
 function Configuration() {
   let usuario = localStorage.getItem('usuario');
-  
+
   /* Cambio de contraseña */
   const [oldPassword, setOldPassword] = useState('');
   const [conf, setConf] = useState('');
@@ -140,8 +147,6 @@ function Configuration() {
   }
 
   async function CheckPassword() {
-    console.log(oldPassword);
-
     var conf;
 
     await fetch('/api/checkOldPassoword/' + usuario + '/' + oldPassword, {
@@ -185,7 +190,7 @@ function Configuration() {
 
     var check;
 
-    if (conf == false && oldPassword != ''){
+    if (conf == false && oldPassword != '') {
       if (newPassword.match(/^[a-zA-Z0-9!@#\$%\^\&*_=+-]{8,12}$/g) && newPassword2.match(/^[a-zA-Z0-9!@#\$%\^\&*_=+-]{8,12}$/g) && newPassword == newPassword2) {
         await fetch('/api/changePassword/' + usuario, {
           method: 'PUT',
@@ -213,7 +218,7 @@ function Configuration() {
         document.getElementById('alert-erroroldpass-regis').style.display = "none";
         setTimeout(() => { document.getElementById('alert-updatepass-regis').style.display = 'none' }, 3000);
       }
-    }else{
+    } else {
       document.getElementById('alert-erroroldpass-regis').style.display = "block";
       document.getElementById('alert-updatepass-regis').style.display = "none";
       document.getElementById('alert-errorpass-regis').style.display = "none";
@@ -237,7 +242,7 @@ function Configuration() {
     fetch('/api/checkStyleMusic/' + usuario).then(resp => resp.json()).then(data => gen = data['genero']);
     setTimeout(() => {
       document.getElementById('actual-gen').innerHTML = 'La seleccion actual es: <span class="bold-gen-style">' + gen + '</span>';
-    }, 100);
+    }, 500);
   }
 
   useEffect(() => {
@@ -268,7 +273,7 @@ function Configuration() {
     } else {
       document.getElementById('alert-updatestyle-regis').style.display = "block";
       document.getElementById('alert-errorstyle-regis').style.display = "none";
-      setTimeout(() => { document.getElementById('alert-updatestyle-regis').style.display = 'none' }, 3000);
+      setTimeout(() => { document.getElementById('alert-updatestyle-regis').style.display = 'none' }, 1000);
       checkGen();
     }
 
