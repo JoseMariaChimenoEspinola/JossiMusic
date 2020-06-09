@@ -280,6 +280,25 @@ function Configuration() {
 
   }
 
+
+  /* datos de usuario */
+  const [dataUser, setDataUser] = useState([]);
+  const artistaID = localStorage.getItem('usuario');
+
+  function getDataUser() {
+    fetch('/api/getDataUser/' + artistaID, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(resp => resp.text()).then(data => setDataUser(JSON.parse(data)));
+  }
+
+  setTimeout(() => {
+    getDataUser()
+  }, 200);
+
+
   return (
     <div id="wrapper">
       <header>
@@ -289,11 +308,15 @@ function Configuration() {
         <div className="conf-container">
           <h1>Configuration</h1>
 
+          <Divider />
           <div className="container-options">
             <div className="container-option-div">
               <h3>Cambio de contraseña</h3>
               <p>Completa el siguiente formulario para poder realizar el cambio de contraseña</p>
 
+              <div className="forms-options">
+
+              </div>
               <div className="forms-options">
                 <FormControl className="input-password-changes">
                   <InputLabel htmlFor="standard-adornment-password">Contraseña antigua:</InputLabel>

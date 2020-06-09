@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import CloseIcon from '@material-ui/icons/Close';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import Button from '@material-ui/core/Button';
+import { BrowserRouter, Link } from 'react-router-dom';
+
 
 function Start(id) {
     var list = new Array;
+    var artistaID = "";
+    var songID = "";
     var artista;
 
     fetch('/api/getCancionPorId/' + id).then(resp => resp.json()).then(data => {
         list.push(data);
+        console.log(data);
+        
         fetch('/api/getDataUser/' + data['artista'], {
             method: 'GET',
             headers: {
@@ -17,13 +22,15 @@ function Start(id) {
         }).then(resp => resp.json()).then(data => {
             artista = data;
         });
+        artistaID = data['artista'];
+        songID = data['_id'];
     });
 
-    
-    
+
+
     console.log(artista);
     setTimeout(() => {
-        
+
         setTimeout(() => {
             if (list[0] == null) {
                 document.getElementsByClassName('titulo-reproductor')[0].innerHTML = "Busca una cancion";
@@ -34,7 +41,7 @@ function Start(id) {
                 document.getElementsByClassName('genero-reproductor')[0].innerHTML = list[0].genero;
                 document.getElementById('audio-player').setAttribute('src', list[0].dircancion);
                 document.getElementById('audio-player').play();
-                document.getElementsByClassName('remove-song-reproductor')[0].style.display = "block";
+                document.getElementsByClassName('remove-song-reproductor')[0].style.display = "block";                
             }
 
         }, 100);
@@ -49,7 +56,7 @@ function Start(id) {
         document.getElementsByClassName('remove-song-reproductor')[0].style.display = "none";
     }
 
-    
+
     function returnData() {
         return (
             <div>

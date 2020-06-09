@@ -208,35 +208,6 @@ export default function FormUploader() {
         console.log(res);
     }
 
-    function PreviewCaratula() {
-        return(
-            <div className={classes.containerPreview}>
-                <p>{photo.name}</p>
-                <img src={URL.createObjectURL(photo)} className={classes.caratulaPreview}></img>
-                {progrescarat == 100 ? <HighlightOffIcon onClick={resetPhoto} className={classes.closeIcon} /> : <CircularProgress className={classes.closeIcon} variant="static" value={progrescarat} max="100" />}
-            </div>
-        );
-    }
-
-    function PreviewCancion() {
-        return (
-            <div className={classes.containerPreview}>
-                <p>{song.name}</p>
-                <ThemeProvider theme={muiTheme}>
-                    <AudioPlayer
-                        width="100%"
-                        variation="default"
-                        spacing={3}
-                        order="standart"
-                        preload="auto"
-                        src={URL.createObjectURL(song)}
-                    />
-                </ThemeProvider>
-                {progressong == 100 ? <HighlightOffIcon onClick={resetSong} className={classes.closeIcon} /> : <CircularProgress className={classes.closeIcon} variant="static" value={progressong} max="100"/>}
-            </div>
-        );
-    }
-
     return (
         <div id="wrapper">
             <header>
@@ -257,7 +228,20 @@ export default function FormUploader() {
                                     {isDragReject && <p className={classes.textRedUpload}>El archivo no es compatible con este campo. (ej: .jpg, )</p>}
                                 </div>
                             )}
-                        </Dropzone> : <PreviewCancion/>}
+                        </Dropzone> : <div className={classes.containerPreview}>
+                                <p>{song.name}</p>
+                                <ThemeProvider theme={muiTheme}>
+                                    <AudioPlayer
+                                        width="100%"
+                                        variation="default"
+                                        spacing={3}
+                                        order="standart"
+                                        preload="auto"
+                                        src={URL.createObjectURL(song)}
+                                    />
+                                </ThemeProvider>
+                                {progressong == 100 ? <HighlightOffIcon onClick={resetSong} className={classes.closeIcon} /> : <CircularProgress className={classes.closeIcon} variant="static" value={progressong} max="100" />}
+                            </div>}
                     </div>
                 <p>Foto de Caratula</p>
                     <div>
@@ -265,12 +249,20 @@ export default function FormUploader() {
                             {({ getRootProps, getInputProps, isDragActive, isDragReject}) => (
                                 <div {...getRootProps({ className: "dropzone" })} className={classes.dropzone}>
                                     <input {...getInputProps()} onChange={handlePhoto} accept="image/*"/>
-                                    {photo == '' ? <p>Haz click a este contenedor para poder subir una canción.<br></br></p> : <PreviewCaratula/> }
+                                    {photo == '' ? <p>Haz click a este contenedor para poder subir una canción.<br></br></p> : <div className={classes.containerPreview}>
+                                        <p>{photo.name}</p>
+                                        <img src={URL.createObjectURL(photo)} className={classes.caratulaPreview}></img>
+                                        {progrescarat == 100 ? <HighlightOffIcon onClick={resetPhoto} className={classes.closeIcon} /> : <CircularProgress className={classes.closeIcon} variant="static" value={progrescarat} max="100" />}
+                                    </div> }
                                     {isDragActive && !isDragReject && <p className={classes.textGreenUpload}>Archivo compatible, sueltalo para poder subir este archivo</p>}
                                     {isDragReject && <p className={classes.textRedUpload}>El archivo no es compatible con este campo. (ej: .jpg, )</p>}
                                 </div>
                             )}
-                        </Dropzone> : <PreviewCaratula/>}
+                        </Dropzone> : <div className={classes.containerPreview}>
+                                <p>{photo.name}</p>
+                                <img src={URL.createObjectURL(photo)} className={classes.caratulaPreview}></img>
+                                {progrescarat == 100 ? <HighlightOffIcon onClick={resetPhoto} className={classes.closeIcon} /> : <CircularProgress className={classes.closeIcon} variant="static" value={progrescarat} max="100" />}
+                            </div>}
                     </div>
                 </div>
                 <div className={classes.form}>

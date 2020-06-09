@@ -1,8 +1,9 @@
 import React, { useState, useEffect, Suspense } from 'react';
-import AudioPlayer from 'material-ui-audio-player';
+import ReactDOM from "react-dom";
+import ReactDOMServer from 'react-dom/server';
 import AOS from 'aos';
 
-import { NavLink } from 'react-router-dom';
+import { BrowserRouter, Link, NavLink } from 'react-router-dom';
 
 import Divider from '@material-ui/core/Divider';
 import './App.css';
@@ -59,7 +60,7 @@ class HomeLogin extends React.Component {
     AOS.init({
       duration: 1200,
     });
-    this.state = {"gen" : ""};
+    this.state = { "gen": "" };
   }
 
   componentWillReceiveProps() {
@@ -76,15 +77,14 @@ class HomeLogin extends React.Component {
       fetch('/api/checkStyleMusic/' + localStorage.getItem('usuario')).then(resp => resp.json()).then(data => gen = data['genero']);
       setTimeout(() => {
         document.getElementsByClassName('style-selected-home')[0].innerHTML = gen;
-      }, 100);
+      }, 300);
     }
 
     setTimeout(() => {
       checkGen();
-    }, 100);
-
-
+    }, 200);
     //Get canciones en home
+
     setTimeout(function () {
       fetch('/api/getMusicStyleHome/' + gen).then(resp => resp.json()).then(data => {
         for (let x of data) {
@@ -93,29 +93,37 @@ class HomeLogin extends React.Component {
       });
 
       setTimeout(function () {
-        var data = "";
-        
-        if (listStyle.length != 0){
+        var data = [];
+
+        if (listStyle.length != 0) {
           for (var i = 0; i < listStyle.length; i++) {
-            data += '<div class="div-contenedor-resultados">';
-            data += '<a value="' + listStyle[i]._id + '" class="link-song" id="link-song-' + i + '"><img class="foto-contenedor-resultados" src="' + listStyle[i].dircaratula + '"></img>';
-            data += '<p>' + listStyle[i].titulo + '</p>';
-            data += '<p>' + listStyle[i].genero + '</p>';
-            data += '<p>' + listStyle[i].fecha + '</p></a>';
-            data += '<a href="/cancion?song=' + listStyle[i]._id +'"><Button class="button-songs">Ver Mas</Button></a>';
-            data += '</div>';
-            document.getElementById('songs-style-home').innerHTML = data;
+            var id = listStyle[i]._id;
+            data.push(<div class="div-contenedor-resultados">
+              <a value={listStyle[i]._id} class="link-song" id={"link-song-" + i}>
+                <img class="foto-contenedor-resultados" src={listStyle[i].dircaratula}></img>
+                <p>{listStyle[i].titulo}</p>
+                <p>{listStyle[i].genero}</p>
+                <p>{listStyle[i].fecha}</p>
+              </a>
+              <BrowserRouter>
+                <NavLink to={"/cancion?song="+id}><Button variant="contained" color="primary">Ver más</Button></NavLink>
+              </BrowserRouter>
+            </div>);
           }
+
+          ReactDOM.render(
+            data, document.getElementById('songs-style-home'));
+
           for (var i = 0; i < listStyle.length; i++) {
             (function (i) {
               var id = listStyle[i]._id;
               document.getElementById('link-song-' + i).onclick = function (event) { event.preventDefault(); Start(id) };
             })(i);
           }
-        }else{
+        } else {
           document.getElementById('songs-style-home').innerHTML = "¿Vaya!, no hay contenido con este estilo.";
         }
-        
+
 
       }, 900);
     }, 800);
@@ -161,7 +169,7 @@ class HomeLogin extends React.Component {
             <Divider className="divider" />
             <section className="estilo-inicio">
               <h2>Novedades de <span className="style-selected-home"></span></h2>
-              <Divider/><br></br>
+              <Divider /><br></br>
               <h3 className="titulo-cancion-detalles">Canciones</h3>
               <GridList cols={3}>
                 <div id="songs-style-home"></div>

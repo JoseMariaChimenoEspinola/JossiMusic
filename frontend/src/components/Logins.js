@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { SetUserState } from '../localstorage/states';
+import Dropzone from 'react-dropzone';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { storage } from '../firebase/config';
 
@@ -26,6 +29,9 @@ import DateRangeIcon from '@material-ui/icons/DateRange';
 
 import Alert from '@material-ui/lab/Alert';
 
+/* correo electronico */
+import emailjs from 'emailjs-com';
+
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -36,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        justifyContent: "space-around"
     },
     withoutLabel: {
         marginTop: theme.spacing(3),
@@ -50,7 +57,78 @@ const useStyles = makeStyles((theme) => ({
     selectEmpty: {
         marginTop: theme.spacing(2),
     },
+    root: {
+        position: "absolute",
+        top: "130px",
+        left: "300px",
+        right: "300px",
+        border: "1px solid grey",
+        borderRadius: "15px",
+        padding: "65px",
+        display: "flex",
+        justifyContent: "space-around"
+    },
+    titulo: {
+        paddingTop: "75px",
+        textAlign: "center"
+    },
+    media: {
+        width: "45%"
+    },
+    form: {
+        width: "55%!important",
+        display: "flex",
+        alignItems: "unsafe",
+        flexDirection: "column"
+    },
+    dropzone: {
+        display: "flex",
+        alignItems: "center",
+        textAlign: "center",
+        padding: "20px",
+        border: "3px dashed #eeeeee",
+        backgroundColor: "#fafafa",
+        color: "",
+        marginBottom: "5px",
+        "&:hover": {
+            cursor: "pointer"
+        },
+        "&:focus": {
+            outline: 0
+        },
+        height: "120px",
+        width: "100%"
+    },
+    textRedUpload: {
+        color: "red"
+    },
+    textGreenUpload: {
+        color: "green"
+    },
+    containerPreview: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-evenly",
+        height: "120px"
+    },
+    caratulaPreview: {
+        width: "100px",
+        borderRadius: "100%"
+    },
+    closeIcon: {
+        marginTop: "20px",
+        transition: "0.3s all",
+        "&:hover": {
+            color: "red",
+            cursor: "pointer",
+            transition: "0.3s all"
+        }
+    },
+    container: {
+        width: "100% !important"
+    }
 }));
+
 
 function LoginForm() {
     const classes = useStyles();
@@ -71,7 +149,7 @@ function LoginForm() {
             },
         }).then(resp => resp.json()).then(data => {
             return data;
-        }).catch(function() {
+        }).catch(function () {
             document.getElementById('alert-error-login').style.display = "block";
             setTimeout(() => { document.getElementById('alert-error-login').style.display = 'none' }, 3000);
         });
@@ -141,10 +219,13 @@ function LoginForm() {
 function RegistroForm() {
     const classes = useStyles();
 
+    const [photo, setPhoto] = useState("");
     const [urlPhoto, setUrlPhoto] = useState('');
+    const [progrescarat, setProgressCarat] = useState(0);
+
     function handlePhoto(event) {
         var file = event.target.files[0];
-
+        setPhoto(file);
         var namefile = String(file.name);
         var typefile = String(file.type);
         var blob = new Blob([file], { type: typefile });//convierto el archivo a un blob con el tipo de archivo dinamicamente.
@@ -153,10 +234,10 @@ function RegistroForm() {
         uploadSong.on(
             "state_changed",
             snapshot => {
-                /*const progress = Math.round(
+                const progress = Math.round(
                     (snapshot.bytesTransferred / snapshot.totalBytes) * 100
                 );
-                setProgressSong(progress);*/
+                setProgressCarat(progress);
             },
             error => {
                 console.log(error);
@@ -165,8 +246,16 @@ function RegistroForm() {
                 storage.ref("fotosperfil").child(namefile).getDownloadURL().then(url => { setUrlPhoto(url); });
             }
         );
-            console.log(urlPhoto);
+        console.log(urlPhoto);
     }
+    function resetPhoto() {
+        setPhoto('');
+        var namefile = String(photo.name);
+        storage.ref(`songs/${namefile}`).delete();
+        setProgressCarat(0);
+    }
+
+
     const [usuario, setUsuario] = useState('');
     const [email, setEmail] = useState('');
     const [fecha, setFecha] = useState('');
@@ -203,7 +292,7 @@ function RegistroForm() {
             document.getElementById('alert-error-regis').style.display = "none";
         }
         console.log(check);
-
+        sendEmail(usuario, email);
     }
 
     const handleClickShowPassword = () => {
@@ -216,8 +305,28 @@ function RegistroForm() {
 
     return (
         <div className={classes.margin}>
+            <div className={clsx(classes.container)}>
+                {photo == '' ? <Dropzone for="input-file">
+                    {({ getRootProps, getInputProps, isDragActive, isDragReject }) => (
+                        <div {...getRootProps({ className: "dropzone" })} className={classes.dropzone}>
+                            <input {...getInputProps()} onChange={handlePhoto} accept="image/*" />
+                            {photo == '' ? <p>Haz click a este contenedor para poder subir una Foto.<br></br></p> :
+                                <div className={classes.containerPreview}>
+                                    <p>{photo.name}</p>
+                                    <img src={urlPhoto} className={classes.caratulaPreview}></img>
+                                    {progrescarat == 100 ? <HighlightOffIcon onClick={resetPhoto} className={classes.closeIcon} /> : <CircularProgress className={classes.closeIcon} value={progrescarat} max="100" />}
+                                </div>}
+                            {isDragActive && !isDragReject && <p className={classes.textGreenUpload}>Archivo compatible, sueltalo para poder subir este archivo</p>}
+                            {isDragReject && <p className={classes.textRedUpload}>El archivo no es compatible con este campo. (ej: .jpg, )</p>}
+                        </div>
+                    )}
+                </Dropzone> : <div className={classes.containerPreview}>
+                        <img src={urlPhoto} className={classes.caratulaPreview}></img>
+                        {progrescarat == 100 ? <HighlightOffIcon onClick={resetPhoto} className={classes.closeIcon} /> : <CircularProgress className={classes.closeIcon} value={progrescarat} max="100" />}
+                    </div>}
+            </div>
             <form onSubmit={RegistrarApi} className={classes.margin}>
-                <input type="file" accept="image/*" onChange={handlePhoto} required></input>
+                <div className={clsx(classes.container)}>
                 <Grid container spacing={1} alignItems="flex-end">
                     <Grid item>
                         <AccountCircle />
@@ -242,6 +351,7 @@ function RegistroForm() {
                         <Input id="Birthday" type="date" className="date-input" onChange={e => setFecha(e.target.value)} required />
                     </Grid>
                 </Grid>
+                </div>
                 <FormControl className={clsx(classes.margin, classes.textField)}>
                     <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
                     <Input
@@ -276,16 +386,32 @@ function RegistroForm() {
                         <MenuItem value={"House"}>House</MenuItem>
                     </Select>
                 </FormControl>
-                <Button type="submit" variant="contained" color="secondary" >Registrar</Button>
+                <Button type="submit" variant="contained" color="secondary" disabled={progrescarat == 100 ? false : true}>Registrar</Button>
                 <div id="alert-error-regis">
                     <Alert severity="error">Esta cuenta ya existe</Alert>
                 </div>
                 <div id="alert-newuser-regis">
-                    <Alert severity="success">El registro se ha realizado correctamente</Alert>
+                    <Alert severity="success">Registro completado</Alert>
                 </div>
             </form>
         </div>
     );
 }
+
+/* correo de registro */
+function sendEmail(usuario, email) {
+    alert("hola");
+    var templateParams = {
+        to_name: email,
+        usuario: usuario
+    }
+    emailjs.send('gmail', 'template_TwxrwEs5', templateParams, 'user_yyMozYnxNs5GlhgdMmqDp')
+        .then((result) => {
+            console.log(result.text);
+        }, (error) => {
+            console.log(error.text);
+        });
+}
+
 
 export { LoginForm, RegistroForm };

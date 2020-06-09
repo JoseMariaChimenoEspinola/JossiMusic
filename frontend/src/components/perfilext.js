@@ -94,7 +94,7 @@ function ProfileUser() {
   var list = new Array;
   const [cancionesSubidas, setCancionesSubidas] = useState(0);
   setTimeout(function () {
-    fetch('/api/getMusic/' + usuario).then(resp => resp.json()).then(data => {
+    fetch('/api/getMusic/' + artista).then(resp => resp.json()).then(data => {
       for (let x of data) {
         list.push(x);
       }

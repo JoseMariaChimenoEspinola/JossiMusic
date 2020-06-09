@@ -12,11 +12,16 @@ body {
 
 .content{
   padding-top: 60px;
+  padding-bottom: 60px !important;
 }
 
 *{
   margin: 0px;
   padding: 0px;
+}
+
+.backdrop{
+  z-index: 9999999999999999 !important;
 }
 
 button{
@@ -616,6 +621,7 @@ header{
 .avatar-coments{
   width: 50px !important;
   height: 50px !important;
+  margin-right: 30px;
 }
 
 .textarea-comentarios{
@@ -633,6 +639,10 @@ header{
 
 .button-upload-comment{
   margin: 10px !important;
+}
+
+.no-comments-songs{
+  text-align: center;
 }
 
 /************************* Reproductor *************************/
@@ -697,6 +707,10 @@ header{
 }
 
 .remove-song-reproductor{
+  display: none;
+}
+
+.buttons-show-repro{
   display: none;
 }
 
