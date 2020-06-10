@@ -167,7 +167,7 @@ function MenuHeaderLoginSearch() {
     }).then(resp => resp.json()).then(data => {
         setUsuario(data['usuario']);
     });
-    
+
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
         <Menu
@@ -218,7 +218,7 @@ function MenuHeaderLoginSearch() {
         setSongCheck(event.target.checked);
         { songscheck == true ? document.getElementById('canciones').style.display = "none" : document.getElementById('canciones').style.display = "flex" }
         { songscheck == true ? document.getElementById('titulo-canciones').style.display = "none" : document.getElementById('titulo-canciones').style.display = "flex" }
-        { songscheck == true ? document.getElementsByClassName('container-grids')[0].style.height = "0px" : document.getElementsByClassName('container-grids')[0].style.height = "210px" }
+        { songscheck == true ? document.getElementsByClassName('container-grids-songs')[0].style.height = "0px" : document.getElementsByClassName('container-grids-songs')[0].style.height = "250px" }
     }
 
     const [artistcheck, setArtistCheck] = useState(true);
@@ -226,7 +226,7 @@ function MenuHeaderLoginSearch() {
         setArtistCheck(event.target.checked);
         { artistcheck == true ? document.getElementById('artistas').style.display = "none" : document.getElementById('artistas').style.display = "flex" }
         { artistcheck == true ? document.getElementById('titulo-artistas').style.display = "none" : document.getElementById('titulo-artistas').style.display = "flex" }
-        { artistcheck == true ? document.getElementsByClassName('container-grids')[1].style.height = "0px" : document.getElementsByClassName('container-grids')[1].style.height = "210px" }
+        { artistcheck == true ? document.getElementsByClassName('container-grids-artists')[0].style.height = "0px" : document.getElementsByClassName('container-grids-artists')[0].style.height = "250px" }
     }
 
     async function showBuscador() {
@@ -264,59 +264,62 @@ function MenuHeaderLoginSearch() {
             /* Oculta las diferentes opciones del buscador progresivamente, de tal manera que cuando el usuario escriba algo,
              muestre unicamente lo que se encuentre, si no hay canciones con estos resultados, el especio desaparecera */
             if (canciones.length != 0) {
-                for (var i = 0; i < canciones.length; i++) {
-                    var id = canciones[i]._id;
-                    var titulo = canciones[i].titulo;
-                    var url = canciones[i].dircancion;
-                    document.getElementsByClassName('container-grids')[0].style.height = "210px"
-                    document.getElementById('titulo-canciones').style.display = "block"
-
-                    songs += '<div class="div-contenedor-resultados">';
-                    songs += '<a value="' + id + '" class="link-song" id="link-song-' + i + '"><img class="foto-contenedor-resultados" src="' + canciones[i].dircaratula + '"></img>';
-                    songs += '<p><span>' + titulo + '<span></p>';
-                    songs += '<p>' + canciones[i].artista + '</p></a>';
-                    songs += '<a href="/cancion?song=' + canciones[i]._id + '"><Button class="button-songs">Ver Mas</Button></a>';
-                    songs += '</div>';
-
-
-                    document.getElementById('canciones').innerHTML = songs;
-
-                    (function (i) {
+                if (songscheck == true) {
+                    for (var i = 0; i < canciones.length; i++) {
                         var id = canciones[i]._id;
-                        document.getElementById('link-song-' + i).onclick = function () { Start(id) };
-                    })(i);
-                    
-                }
-                for (var i = 0; i < canciones.length; i++) {
-                    (function (i) {
-                        var id = canciones[i]._id;
-                        document.getElementById('link-song-' + i).onclick = function () { Start(id) };
-                    })(i);
+                        var titulo = canciones[i].titulo;
+                        var url = canciones[i].dircancion;
+                        document.getElementsByClassName('container-grids-songs')[0].style.height = "250px"
+                        document.getElementById('titulo-canciones').style.display = "block"
+
+                        songs += '<div class="div-contenedor-resultados">';
+                        songs += '<a value="' + id + '" class="link-song" id="link-song-' + i + '"><img class="foto-contenedor-resultados" src="' + canciones[i].dircaratula + '"></img>';
+                        songs += '<p><span>' + titulo + '<span></p>';
+                        songs += '<p>' + canciones[i].artista + '</p></a>';
+                        songs += '<a href="/cancion?song=' + canciones[i]._id + '"><Button class="button-songs">Ver Mas</Button></a>';
+                        songs += '</div>';
+
+
+                        document.getElementById('canciones').innerHTML = songs;
+
+                        (function (i) {
+                            var id = canciones[i]._id;
+                            document.getElementById('link-song-' + i).onclick = function () { Start(id) };
+                        })(i);
+
+                    }
+                    for (var i = 0; i < canciones.length; i++) {
+                        (function (i) {
+                            var id = canciones[i]._id;
+                            document.getElementById('link-song-' + i).onclick = function () { Start(id) };
+                        })(i);
+                    }
                 }
             } else {
-                document.getElementById('canciones').innerHTML = "<h2></h2>";
-                document.getElementById('titulo-canciones').style.display = "none"
-                document.getElementsByClassName('container-grids')[0].style.height = "0px"
+                document.getElementById('canciones').innerHTML = "<h5>No hay resultados</h5>";
+                document.getElementsByClassName('container-grids-songs')[0].style.height = "0%";
             }
 
 
 
 
             if (artistas.length != 0) {
-                for (var i = 0; i < artistas.length; i++) {
-                    document.getElementsByClassName('container-grids')[1].style.height = "210px";
-                    document.getElementById('titulo-artistas').style.display = "block";
+                if (artistcheck == true) {
+                    for (var i = 0; i < artistas.length; i++) {
+                            document.getElementsByClassName('container-grids-artists')[0].style.height = "250px";
+                            document.getElementById('titulo-artistas').style.display = "block";
 
-                    artists += '<div class="div-contenedor-resultados">';
-                    artists += '<img class="foto-contenedor-resultados" src="' + artistas[i].foto + '"></img>';
-                    artists += '<p><span>' + artistas[i].usuario + '<span></p>';
-                    artists += '</div>';
-                    document.getElementById('artistas').innerHTML = artists;
+                            artists += '<div class="div-contenedor-resultados">';
+                            artists += '<img class="foto-contenedor-resultados" src="' + artistas[i].foto + '"></img>';
+                            artists += '<p><span>' + artistas[i].usuario + '<span></p>';
+                            artists += '</div>';
+                            document.getElementById('artistas').innerHTML = artists;
+                    }
                 }
+
             } else {
-                document.getElementById('artistas').innerHTML = "";
-                document.getElementById('titulo-artistas').style.display = "none"
-                document.getElementsByClassName('container-grids')[1].style.height = "0px"
+                document.getElementById('artistas').innerHTML = "<h5>No hay artistas con este nombre</h5>";
+                document.getElementsByClassName('container-grids-artists')[0].style.height = "0px"
             }
 
 
@@ -341,7 +344,7 @@ function MenuHeaderLoginSearch() {
         <div className={classes.grow}>
             <AppBar position="static">
                 <Toolbar>
-                    
+
                     <Typography className={classes.title} variant="h6" noWrap>
                         <NavLink to="/"><img src={logo} className="logo-menu" /></NavLink>
                     </Typography>
@@ -431,14 +434,14 @@ function MenuHeaderLoginSearch() {
                         <Divider /><br></br>
                         <h6>Resultados:</h6>
                         <h2 id="titulo-canciones">Canciones</h2>
-                        <div className="container-grids">
+                        <div className="container-grids-songs">
                             <GridList className={"gridlist"} cols={2.5}>
                                 <div id="canciones"></div>
                             </GridList>
                         </div>
 
                         <h2 id="titulo-artistas">Artistas</h2>
-                        <div className="container-grids">
+                        <div className="container-grids-artists">
                             <GridList className={"gridlist"} cols={2.5}>
                                 <div id="artistas"></div>
                             </GridList>

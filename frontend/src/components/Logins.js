@@ -400,7 +400,6 @@ function RegistroForm() {
 
 /* correo de registro */
 function sendEmail(usuario, email) {
-    alert("hola");
     var templateParams = {
         to_name: email,
         usuario: usuario

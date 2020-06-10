@@ -136,8 +136,6 @@ function ProfileUser() {
             <h5>{fecha}</h5>
             <h5>{email}</h5>
             <h5>{cancionesSubidas} canciones</h5>
-            <br></br>
-            <Button variant="contained" color="primary">Seguir</Button>
           </div>
         </div>
         <Divider />

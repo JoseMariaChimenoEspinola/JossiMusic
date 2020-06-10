@@ -221,12 +221,7 @@ function ProfileUser() {
               <br></br>
               <Button variant="contained" onClick={function () { Start(cancion) }}><PlayCircleFilledIcon /></Button>
             </div>
-            <Divider className="divider-options-song" />
-            <div>
-              <h4>0<br></br> Reproducciones</h4>
-              <h4>0<br></br> Likes</h4>
-              <Button variant="contained" color="primary" className="like-button"><ThumbUpAltIcon /></Button>
-            </div>
+
           </div>
           <Divider />
           <div className="profile-style-container">

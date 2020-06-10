@@ -93,27 +93,19 @@ class HomeLogin extends React.Component {
       });
 
       setTimeout(function () {
-        var data = [];
+        var data = "";
 
         if (listStyle.length != 0) {
           for (var i = 0; i < listStyle.length; i++) {
-            var id = listStyle[i]._id;
-            data.push(<div class="div-contenedor-resultados">
-              <a value={listStyle[i]._id} class="link-song" id={"link-song-" + i}>
-                <img class="foto-contenedor-resultados" src={listStyle[i].dircaratula}></img>
-                <p>{listStyle[i].titulo}</p>
-                <p>{listStyle[i].genero}</p>
-                <p>{listStyle[i].fecha}</p>
-              </a>
-              <BrowserRouter>
-                <NavLink to={"/cancion?song="+id}><Button variant="contained" color="primary">Ver más</Button></NavLink>
-              </BrowserRouter>
-            </div>);
+            data += '<div class="div-contenedor-resultados">';
+            data += '<a value="' + listStyle[i]._id + '" class="link-song" id="link-song-' + i + '"><img class="foto-contenedor-resultados" src="' + listStyle[i].dircaratula + '"></img>';
+            data += '<p>' + listStyle[i].titulo + '</p>';
+            data += '<p>' + listStyle[i].genero + '</p>';
+            data += '<p>' + listStyle[i].fecha + '</p></a>';
+            data += '<a href="/cancion?song=' + listStyle[i]._id + '"><Button class="button-songs">Ver Mas</Button></a>';
+            data += '</div>';
+            document.getElementById('songs-style-home').innerHTML = data;
           }
-
-          ReactDOM.render(
-            data, document.getElementById('songs-style-home'));
-
           for (var i = 0; i < listStyle.length; i++) {
             (function (i) {
               var id = listStyle[i]._id;
@@ -141,13 +133,14 @@ class HomeLogin extends React.Component {
 
         if (listStyleArtists.length != 0) {
           for (var i = 0; i < listStyleArtists.length; i++) {
-            data += '<div class="div-contenedor-resultados">';
-            data += '<img class="foto-contenedor-resultados" src="' + listStyleArtists[i].foto + '"></img>';
-            data += '<p>' + listStyleArtists[i].usuario + '</p>';
-            data += '<p>' + listStyleArtists[i].genero + '</p>';
-            data += '<a href="/perfilext?artist=' + listStyleArtists[i]._id + '"><Button class="button-songs">Descubrir</Button></a>';
-            data += '</div>';
-            document.getElementById('artists-style-home').innerHTML = data;
+              data += '<div class="div-contenedor-resultados">';
+              data += '<img class="foto-contenedor-resultados" src="' + listStyleArtists[i].foto + '"></img>';
+              data += '<p>' + listStyleArtists[i].usuario + '</p>';
+              data += '<p>' + listStyleArtists[i].genero + '</p>';
+              data += '<a href="/perfilext?artist=' + listStyleArtists[i]._id + '"><Button class="button-songs">Descubrir</Button></a>';
+              data += '</div>';
+              document.getElementById('artists-style-home').innerHTML = data;
+            
           }
         } else {
           document.getElementById('artists-style-home').innerHTML = "¿Vaya!, no hay artistas con este estilo.";

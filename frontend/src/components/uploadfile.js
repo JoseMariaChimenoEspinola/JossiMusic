@@ -14,6 +14,8 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { MenuHeaderLoginSearch } from './Menu';
 import { storage } from '../firebase/config';
+import { NavLink } from 'react-router-dom';
+import Alert from '@material-ui/lab/Alert';
 
 const muiTheme = createMuiTheme({});
 
@@ -184,7 +186,6 @@ export default function FormUploader() {
     const [titulo, setTitulo] = useState('');
     const [descripcion, setDesc] = useState('');
     const [genero, setGen] = useState("");
-    const [visibility, setVis] = useState("");
     async function handleInfo(event) {
         event.preventDefault();
         let artista = localStorage.getItem('usuario');
@@ -201,11 +202,21 @@ export default function FormUploader() {
                 titulo,
                 descripcion,
                 genero,
-                visibility,
                 artista
             })
         })
         console.log(res);
+        setTitulo('');
+        setDesc('');
+        setGen('');
+        setPhoto('');
+        setSong('');
+        setUrlCarat('');
+        setUrlSong('');
+        setProgressCarat('');
+        setProgressSong('');
+        document.getElementById('alert-updatepass-regis').style.display = "block";
+        setTimeout(() => { document.getElementById('alert-updatepass-regis').style.display = 'none' }, 3000);
     }
 
     return (
@@ -282,25 +293,14 @@ export default function FormUploader() {
                             <MenuItem value={"House"}>House</MenuItem>
                         </Select>
                     </FormControl>
-                    <FormControl className={classes.selector} required>
-                        <InputLabel id="demo-simple-select-label">Visibilidad</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={visibility}
-                            onChange={e => setVis(e.target.value)}
-                        >
-                            <MenuItem value={"publico"}>Publico</MenuItem>
-                            <MenuItem value={"Privado"}>Privado</MenuItem>
-                        </Select>
-                    </FormControl>
                     <div className={classes.divbuttons}>
-                        <Button variant="contained" color="secondary" className={classes.spacebetweenbuttons} onClick={() => { localStorage.setItem('state', 'homelogin'); window.location.reload(false);}}>
-                            Salir
-                        </Button>
                         <Button variant="contained" color="primary" type="submit" disabled={progrescarat == 100 && progressong == 100 ? false : true}>
                             Subir
                         </Button>
+                        
+                    </div>
+                    <div id="alert-updatepass-regis">
+                        <Alert severity="success">La canción se ha subido correctamente</Alert>
                     </div>
                 </div>
                 </form>

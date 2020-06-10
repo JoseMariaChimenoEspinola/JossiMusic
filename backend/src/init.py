@@ -38,7 +38,7 @@ def getUser(usuario,password):
 @app.route('/api/register', methods=['POST'])
 def setNewUser():
     validation = True
-    check = db.find_one({'usuario': request.json['usuario'], 'email':request.json['email']})
+    check = db.find_one({"$or": [{ 'usuario': request.json['usuario'] }, { 'email':request.json['email']} ] })
     if(check == None):
         db.insert({
             'usuario': request.json['usuario'],
@@ -54,13 +54,24 @@ def setNewUser():
     
     return str(validation)
 
+# Update data of user/artist
+@app.route('/api/updateDataUser/<id>', methods=['PUT'])
+def updateUserData(id):
+    validation = True
+
+    data = str(id)
+
+    db.update_one({'_id': ObjectId(data)}, {'$set': {'usuario': request.json['user'],'email': request.json['email'],'foto': request.json['urlPhoto']} })
+
+    return str(validation)
+
 # Get avatar by user
 @app.route('/api/getDataUser/<id>', methods=['GET'])
 def getDataUser(id):
     
     data = str(id)
 
-    gen = db.find_one({'_id': ObjectId(data)}, {"_id": 0, 'usuario':1, "foto": 1})
+    gen = db.find_one({'_id': ObjectId(data)}, {"_id": 0, 'usuario':1, "foto": 1, "fecha": 1, "email":1})
     return jsonify(gen)
 
 # Get caratula by id
@@ -84,7 +95,7 @@ def uploadSong():
     id = dbfiles.insert({
         'titulo': request.json['titulo'],
         'descripcion': request.json['descripcion'],
-        'artista': request.json['artista'],
+        'artista': ObjectId(request.json['artista']),
         'genero': request.json['genero'],
         'dircancion': request.json['urlsong'],
         'dircaratula': request.json['urlCaratula'],
@@ -93,6 +104,16 @@ def uploadSong():
         'likes': 0
     })
     
+    return 'ok'
+
+#eliminar cancion por id
+@app.route('/api/deleteSong/<id>', methods=['GET'])
+def deleteSong(id):
+
+    data = str(id)
+    
+    dbfiles.delete_one({'_id': ObjectId(data)})
+
     return 'ok'
 
 # Buscador de contenido de canciones
@@ -142,37 +163,40 @@ def getCancionPorId(id):
 
     return json.dumps(song , default=str)
 
-#Crear comentarios para cada cancion
+#Obtener comentarios para cada cancion
 @app.route('/api/getCommentsSongs/<song>', methods=['GET'])
 def getCommentsSong(song):
 
     id = str(song)
-    search = dbfiles.find({'_id': ObjectId(id)})
-    
-    songs = []
-    
-    for doc in search:
-        songs.append({
-            '_id': str(ObjectId(doc['_id'])),
-            'titulo': doc['titulo'],
-            'artista': doc['artista'],
-            'genero': doc['genero'],
-            'dircancion': doc['dircancion'],
-            'dircaratula': doc['dircaratula'],
-            'fecha': doc['fecha'],
-            'reproducciones': doc['reproducciones'],
-            'likes': doc['likes']
-            })  
+    comments = dbfiles.find({'_id': ObjectId(id)}, {"_id":0,"comentarios":1})
+    sys.stderr.write(str(comments))
 
-    sys.stderr.write(str(songs))
-    return json.dumps(songs , default=str)
+    return json.dumps(list(comments) , default=str)
+
+#Crear comentario
+@app.route('/api/crearComentario/<id>/<numCom>', methods=['PUT'])
+def createComment(id, numCom):
+
+    data = str(id)
+    
+    dbfiles.update_one({"_id": ObjectId(data)}, {'$addToSet': {"comentarios":{
+        "_id": numCom,
+        "usuario":request.json['usuario'],
+        "foto":request.json['foto'],
+        "texto":request.json['comentario'],
+        "puntuación":request.json['ranking']
+        }}})
+
+    return getCommentsSong(data)
+
+
 
 # OBTENER ARTISTA POR ID
 @app.route('/api/getArtistaPorId/<id>', methods=['GET'])
 def getArtistaPorId(id):
     data = str(id)
     song = db.find_one({'_id': ObjectId(data)}, {'usuario': 1,'email': 1,'fecha': 1,'genero': 1})
-    sys.stderr.write(str(song))
+
     return json.dumps(song , default=str)
 
 
@@ -201,7 +225,6 @@ def getUserSong(artista):
 
     sys.stderr.write(str(songs))
     return json.dumps(songs , default=str)
-
 
 #get music stylemusic on homepage
 @app.route('/api/getMusicStyleHome/<genero>', methods=['GET'])
