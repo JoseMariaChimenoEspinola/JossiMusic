@@ -45,7 +45,7 @@ class Home extends React.Component {
         </section>
         <footer>
           <div className="footer-container">
-            <p>Legal&nbsp;&nbsp;|&nbsp;&nbsp;Politica de privacidad&nbsp;&nbsp;|&nbsp;&nbsp;Quienes somos&nbsp;&nbsp;|&nbsp;&nbsp;Ayuda</p>
+            <p>© 2020 JossicMusic</p>
           </div>
         </footer>
       </div>

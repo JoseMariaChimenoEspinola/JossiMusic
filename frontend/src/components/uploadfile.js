@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { makeStyles } from '@material-ui/core/styles';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
@@ -20,31 +20,7 @@ import Alert from '@material-ui/lab/Alert';
 const muiTheme = createMuiTheme({});
 
 const useStyles = makeStyles((theme) => ({
-    root:{
-        position: "absolute",
-        top: "130px",
-        left: "300px",
-        right: "300px",
-        border: "1px solid grey",
-        borderRadius: "15px",
-        padding: "65px",
-        display: "flex",
-        justifyContent: "space-around"
-    },
-    titulo:{
-        paddingTop: "75px",
-        textAlign: "center"
-    },
-    media:{
-        width: "45%"
-    },
-    form:{
-        width: "45%",
-        display: "flex",
-        alignItems: "unsafe",
-        flexDirection: "column"
-    },
-    spaceForm:{
+    spaceForm: {
         margin: "15px 0px",
     },
     selector: {
@@ -54,44 +30,41 @@ const useStyles = makeStyles((theme) => ({
     selectEmpty: {
         marginTop: theme.spacing(2),
     },
-    divbuttons:{
+    divbuttons: {
         display: "flex",
         justifyContent: "flex-end",
         marginTop: "20px"
     },
-    spacebetweenbuttons:{
+    spacebetweenbuttons: {
         marginRight: "20px",
         outline: ""
     },
     dropzone: {
-    textAlign: "center",
-    padding: "20px",
-    border: "3px dashed #eeeeee",
-    backgroundColor: "#fafafa",
-    color: "",
-    marginBottom: "20px",
-    "&:hover":{
-        cursor: "pointer"
+        textAlign: "center",
+        padding: "20px",
+        border: "3px dashed #eeeeee",
+        backgroundColor: "#fafafa",
+        color: "",
+        marginBottom: "20px",
+        "&:hover": {
+            cursor: "pointer"
+        },
+        "&:focus": {
+            outline: 0
+        }
     },
-    "&:focus":{
-        outline: 0
-    }
-    },
-    textRedUpload:{
-        color: "red"
-    },
-    textGreenUpload:{
+    textGreenUpload: {
         color: "green"
     },
-    containerPreview:{
+    containerPreview: {
         display: "flex",
         alignItems: "center",
         flexDirection: "column"
     },
-    caratulaPreview:{
+    caratulaPreview: {
         width: "200px"
     },
-    closeIcon:{
+    closeIcon: {
         marginTop: "20px",
         transition: "0.3s all",
         "&:hover": {
@@ -122,12 +95,12 @@ export default function FormUploader() {
         const uploadSong = storage.ref(`songs/${namefile}`).put(blob);
         uploadSong.on(
             "state_changed",
-            snapshot => { 
+            snapshot => {
                 const progress = Math.round(
                     (snapshot.bytesTransferred / snapshot.totalBytes) * 100
                 );
                 setProgressSong(progress);
-             },
+            },
             error => {
                 console.log(error);
             },
@@ -135,7 +108,7 @@ export default function FormUploader() {
                 storage.ref("songs").child(namefile).getDownloadURL().then(url => { setUrlSong(url); });
             }
         );
-        
+
     }
     function resetSong() {
         setSong('');
@@ -143,13 +116,13 @@ export default function FormUploader() {
         storage.ref(`songs/${namefile}`).delete();
         setProgressSong(0);
     }
-    
+
     //Subir caratula a Firebase
     const [photo, setPhoto] = useState("");
     const [urlCaratula, setUrlCarat] = useState("");
     const [progrescarat, setProgressCarat] = useState(0);
 
-    function handlePhoto(event){
+    function handlePhoto(event) {
         var file = event.target.files[0];
         setPhoto(file);
         //FireBase Upload
@@ -161,12 +134,12 @@ export default function FormUploader() {
         const uploadCarat = storage.ref(`caratulas/${namefile}`).put(blob);
         uploadCarat.on(
             "state_changed",
-            snapshot => { 
+            snapshot => {
                 const progress = Math.round(
                     (snapshot.bytesTransferred / snapshot.totalBytes) * 100
                 );
                 setProgressCarat(progress);
-             },
+            },
             error => {
                 console.log(error);
             },
@@ -224,11 +197,11 @@ export default function FormUploader() {
             <header>
                 <MenuHeaderLoginSearch />
             </header>
-            <h1 className={classes.titulo}>Subir nueva canción</h1>
-            <form className={classes.root} onSubmit={handleInfo}>
-                <div className={classes.media}>
-                <h2>Archivos</h2>
-                <p>Pista Musical</p>
+            <h1 className={"titulo-upload-file"}>Subir nueva canción</h1>
+            <form className={"mobile-first-uploadfile first-uploadfile"} onSubmit={handleInfo}>
+                <div className={"upload-files-part"}>
+                    <h2>Archivos</h2>
+                    <p>Pista Musical</p>
                     <div>
                         {song == '' ? <Dropzone onDrop={handleSong}>
                             {({ getRootProps, getInputProps, isDragActive, isDragReject }) => (
@@ -254,17 +227,17 @@ export default function FormUploader() {
                                 {progressong == 100 ? <HighlightOffIcon onClick={resetSong} className={classes.closeIcon} /> : <CircularProgress className={classes.closeIcon} variant="static" value={progressong} max="100" />}
                             </div>}
                     </div>
-                <p>Foto de Caratula</p>
+                    <p>Foto de Caratula</p>
                     <div>
                         {photo == '' ? <Dropzone for="input-file">
-                            {({ getRootProps, getInputProps, isDragActive, isDragReject}) => (
+                            {({ getRootProps, getInputProps, isDragActive, isDragReject }) => (
                                 <div {...getRootProps({ className: "dropzone" })} className={classes.dropzone}>
-                                    <input {...getInputProps()} onChange={handlePhoto} accept="image/*"/>
+                                    <input {...getInputProps()} onChange={handlePhoto} accept="image/*" />
                                     {photo == '' ? <p>Haz click a este contenedor para poder subir una canción.<br></br></p> : <div className={classes.containerPreview}>
                                         <p>{photo.name}</p>
                                         <img src={URL.createObjectURL(photo)} className={classes.caratulaPreview}></img>
                                         {progrescarat == 100 ? <HighlightOffIcon onClick={resetPhoto} className={classes.closeIcon} /> : <CircularProgress className={classes.closeIcon} variant="static" value={progrescarat} max="100" />}
-                                    </div> }
+                                    </div>}
                                     {isDragActive && !isDragReject && <p className={classes.textGreenUpload}>Archivo compatible, sueltalo para poder subir este archivo</p>}
                                     {isDragReject && <p className={classes.textRedUpload}>El archivo no es compatible con este campo. (ej: .jpg, )</p>}
                                 </div>
@@ -276,10 +249,10 @@ export default function FormUploader() {
                             </div>}
                     </div>
                 </div>
-                <div className={classes.form}>
-                    <h2>Descripción de la pista</h2> 
-                    <TextField id="standard-basic" label="Titulo" value={titulo} onChange={e => setTitulo(e.target.value)} className={classes.spaceForm} required/>
-                    <TextareaAutosize aria-label="empty textarea" placeholder="Descripción (opcional)" value={descripcion} onChange={e => setDesc(e.target.value)} rowsMin={3} className={classes.spaceForm}/>
+                <div className={classes.form, "form-uploadfiles"}>
+                    <h2>Descripción de la pista</h2>
+                    <TextField id="standard-basic" label="Titulo" value={titulo} onChange={e => setTitulo(e.target.value)} className={classes.spaceForm} required />
+                    <TextareaAutosize aria-label="empty textarea" placeholder="Descripción (opcional)" value={descripcion} onChange={e => setDesc(e.target.value)} rowsMin={3} className={classes.spaceForm} />
                     <FormControl className={classes.selector} required>
                         <InputLabel id="demo-simple-select-label">Género</InputLabel>
                         <Select
@@ -297,13 +270,13 @@ export default function FormUploader() {
                         <Button variant="contained" color="primary" type="submit" disabled={progrescarat == 100 && progressong == 100 ? false : true}>
                             Subir
                         </Button>
-                        
+
                     </div>
                     <div id="alert-updatepass-regis">
                         <Alert severity="success">La canción se ha subido correctamente</Alert>
                     </div>
                 </div>
-                </form>
+            </form>
         </div>
     );
 }

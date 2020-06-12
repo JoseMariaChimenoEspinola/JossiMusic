@@ -65,6 +65,13 @@ const useStyles = makeStyles((theme) => ({
             display: 'block',
         },
     },
+    titleMobile: {
+        [theme.breakpoints.down('sm')]: {
+            display: 'block',
+            width: "80px",
+            height: "50px"
+        },
+    },
     search: {
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
@@ -306,14 +313,14 @@ function MenuHeaderLoginSearch() {
             if (artistas.length != 0) {
                 if (artistcheck == true) {
                     for (var i = 0; i < artistas.length; i++) {
-                            document.getElementsByClassName('container-grids-artists')[0].style.height = "250px";
-                            document.getElementById('titulo-artistas').style.display = "block";
+                        document.getElementsByClassName('container-grids-artists')[0].style.height = "250px";
+                        document.getElementById('titulo-artistas').style.display = "block";
 
-                            artists += '<div class="div-contenedor-resultados">';
-                            artists += '<img class="foto-contenedor-resultados" src="' + artistas[i].foto + '"></img>';
-                            artists += '<p><span>' + artistas[i].usuario + '<span></p>';
-                            artists += '</div>';
-                            document.getElementById('artistas').innerHTML = artists;
+                        artists += '<div class="div-contenedor-resultados">';
+                        artists += '<img class="foto-contenedor-resultados" src="' + artistas[i].foto + '"></img>';
+                        artists += '<p><span>' + artistas[i].usuario + '<span></p>';
+                        artists += '</div>';
+                        document.getElementById('artistas').innerHTML = artists;
                     }
                 }
 
@@ -348,6 +355,7 @@ function MenuHeaderLoginSearch() {
                     <Typography className={classes.title} variant="h6" noWrap>
                         <NavLink to="/"><img src={logo} className="logo-menu" /></NavLink>
                     </Typography>
+                    <NavLink to="/" className={classes.titleMobile}><img height="30" src="https://firebasestorage.googleapis.com/v0/b/jossicstorage.appspot.com/o/icon.png?alt=media&token=708d784a-3308-4b35-bcbd-16cbdf351179" className="logo-menu" /></NavLink>
                     <div className={classes.search}>
                         <div className={classes.searchIcon}>
                             <SearchIcon />
@@ -361,7 +369,7 @@ function MenuHeaderLoginSearch() {
                             id="text-input-buscador"
                             inputProps={{ 'aria-label': 'search' }}
                             onInput={showBuscador}
-                        /><Button variant="contained" color="primary" onClick={showBuscador}>Buscar</Button>
+                        /><Button variant="contained" color="primary" onClick={showBuscador} className="hide-button-mobile">Buscar</Button>
                     </div>
                     <div className={classes.grow} />
                     <NavLink to={"/uploadcontent"}><Button

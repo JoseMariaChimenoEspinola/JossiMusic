@@ -22,6 +22,8 @@ dbfiles = mongo.db.songs
 
 #WebPages
 @app.route('/')
+@app.route('/cancion')
+@app.route('/perfilext')
 def index():
     return app.send_static_file('index.html')
 
