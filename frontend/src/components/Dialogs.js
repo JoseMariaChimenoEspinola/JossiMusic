@@ -8,7 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import logo from '../img/logo.png';
 
-import {LoginForm, RegistroForm} from './Logins';
+import { LoginForm, RegistroForm, ResetContarseña } from './Logins';
 
 function LoginDialog() {
     const [open, setOpen] = React.useState(false);
@@ -38,26 +38,27 @@ function LoginDialog() {
                     <DialogContentText id="alert-dialog-description">
                         Entra con tu cuenta para poder acceder a todo el contenido de la plataforma.
                     </DialogContentText>
-                    <LoginForm/>
+                    <LoginForm />
+                    <ContraseñaOlvidada />
                     <div className="divider"></div>
                     <div className="button-regis-login">
-                    <DialogContentText id="alert-dialog-description">
-                        ¿Aun no tienes cuenta?
+                        <DialogContentText id="alert-dialog-description">
+                            ¿Aun no tienes cuenta?
                     </DialogContentText>
                         <RegisDialog />
                     </div>
                 </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleClose} color="primary" autoFocus className="button-no-outlined">
-                            Cerrar
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary" autoFocus className="button-no-outlined">
+                        Cerrar
                         </Button>
-                    </DialogActions>
-                </Dialog>
+                </DialogActions>
+            </Dialog>
             <div className="mobile-display-register">
                 <RegisDialog />
             </div>
-            
-        </div> 
+
+        </div>
     );
 }
 
@@ -90,7 +91,7 @@ function RegisDialog() {
                         Rellena el formulario para poder registrare en la aplicación
                     </DialogContentText>
 
-                        <RegistroForm />
+                    <RegistroForm />
                     <div className="divider"></div>
                 </DialogContent>
                 <DialogActions>
@@ -99,7 +100,7 @@ function RegisDialog() {
                         </Button>
                 </DialogActions>
             </Dialog>
-        </div> 
+        </div>
     );
 }
 
@@ -145,4 +146,45 @@ function CrearCuenta() {
     );
 }
 
-export { LoginDialog, CrearCuenta};
+function ContraseñaOlvidada() {
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    return (
+        <div className="button-login-container">
+            <p onClick={handleClickOpen} className="contraseña-olvidada">
+                ¿Has olvidado la contraseña?
+            </p>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"Resgistrarme"}</DialogTitle>
+                <img src={logo} className="logo-menu" />
+                <DialogContent className="container-form-login">
+                    <DialogContentText id="alert-dialog-description">
+                        Introduce tu correo electronico para verificar tu cuenta y para que un administrador pueda reestablecer tu contraseña
+                    </DialogContentText>
+                    <ResetContarseña />
+                    <div className="divider"></div>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary" autoFocus className="button-no-outlined">
+                        Cerrar
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </div>
+    );
+}
+
+export { LoginDialog, CrearCuenta };

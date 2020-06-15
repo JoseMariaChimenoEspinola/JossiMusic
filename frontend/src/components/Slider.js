@@ -68,7 +68,7 @@ export default function CarouselInicioLogin() {
                     alt="First slide"
                 />
                 <Carousel.Caption>
-                    <Button variant="contained" onClick={function(){Start("5ed5001879d2ae5e2a494b9f")}}>Escuchar Canción</Button>
+                    <Button variant="contained" onClick={function () { Start("5ee39c2d0af13784d58ad6ff")}}>Escuchar Canción</Button>
                 </Carousel.Caption>
             </Carousel.Item>
             <Carousel.Item>
@@ -80,7 +80,7 @@ export default function CarouselInicioLogin() {
 
                 <Carousel.Caption>
                     
-                    <Button variant="contained" onClick={function(){Start("5ed4fa5b79d2ae5e2a494b9e")}}>Escuchar Canción</Button>
+                    <Button variant="contained" onClick={function () { Start("5ee39d8bd35b64f540f62b6d")}}>Escuchar Canción</Button>
                 </Carousel.Caption>
             </Carousel.Item>
         </Carousel>

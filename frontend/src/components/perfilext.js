@@ -104,12 +104,13 @@ function ProfileUser() {
       var data = "";
       setCancionesSubidas(list.length);
       for (var i = 0; i < list.length; i++) {
-        data += '<a value="' + list[i]._id + '" class="link-song" id="link-song-' + i + '"><div class="div-contenedor-resultados">';
-        data += '<img class="foto-contenedor-resultados" src="' + list[i].dircaratula + '"></img>';
+        data += '<div class="div-contenedor-resultados">';
+        data += '<a value="' + list[i]._id + '" class="link-song" id="link-song-' + i + '"><img class="foto-contenedor-resultados" src="' + list[i].dircaratula + '"></img>';
         data += '<p>' + list[i].titulo + '</p>';
         data += '<p>' + list[i].genero + '</p>';
-        data += '<p>' + list[i].fecha + '</p>';
-        data += '</div></a>';
+        data += '<p>' + list[i].fecha + '</p></a>';
+        data += '<a href="/cancion?song=' + list[i]._id + '"><Button class="button-songs">Ver Mas</Button></a>';
+        data += '</div>';
         document.getElementById('songs-container-author').innerHTML = data;
       }
       for (var i = 0; i < list.length; i++) {
@@ -129,7 +130,7 @@ function ProfileUser() {
           <div className="container-avatar-text">
             <label htmlFor="contained-button-file" className="hoverAvatar"><Avatar alt={localStorage.getItem('usuario')} id="photo-avatar" src={caratula} /></label>
           </div>
-          <Divider className="divider-options-song" />
+          <Divider className="divider-options-song divider-phone-conf" />
           <div>
             <h1 className="titulo-cancion-detalles">{usuario}</h1>
             <h3>{genero}</h3>

@@ -48,6 +48,7 @@ function ProfileUser() {
   const [artista, setArtista] = useState("");
   const [artistaID, setArtistaID] = useState("");
   const [genero, setGenero] = useState("");
+  const [desc, setDesc] = useState("");
 
   const [numComentarios, setNumComments] = React.useState(0);
   const [comments, setComments] = useState([]);
@@ -86,8 +87,8 @@ function ProfileUser() {
             setArtista(data['usuario'])
             return true;
           }).catch(() => { return false; });
-
           setGenero(data['genero']);
+          setDesc(data['descripcion']);
 
         }), 0);
 
@@ -172,14 +173,15 @@ function ProfileUser() {
       comments.map(value => {
         rows.push(renderToString(<div>
           <List>
-            <ListItem>
-              <ListItemAvatar>
+            <ListItem className="comment-listitem">
+              <ListItemAvatar className="text-aling-mobile">
                 <Avatar className="avatar-coments" src={value['foto']} />
               </ListItemAvatar>
-              <ListItemText primary={value['usuario']} secondary={value['texto']} />
+              <ListItemText primary={value['usuario']} secondary={value['texto']}  className="text-aling-mobile"/>
               <Rating
                 value={value['puntuación']}
                 readOnly
+                className="text-aling-mobile"
               />
             </ListItem>
           </List>
@@ -213,7 +215,7 @@ function ProfileUser() {
             <div className="container-avatar-text">
               <label htmlFor="contained-button-file" className="hoverAvatar"><Avatar alt={localStorage.getItem('usuario')} id="photo-avatar" src={caratula} /></label>
             </div>
-            <Divider className="divider-options-song" />
+            <Divider className="divider-options-song divider-phone-conf" />
             <div>
               <h1 className="titulo-cancion-detalles">{titulo}</h1>
               <NavLink to={"/perfilext?artist=" + artistaID}><h3>{artista}</h3></NavLink>
@@ -226,7 +228,9 @@ function ProfileUser() {
           <Divider />
           <div className="profile-style-container">
             <div className="container-comentarios">
-              <h1>Comentarios</h1>
+              <h1>Descripción</h1>
+              <p>{desc}</p>
+              <h2>Comentarios</h2>
               <form className="formulario-comentarios" onSubmit={handleInfo}>
                 <TextareaAutosize aria-label="Escribe tu comentario aquí" rowsMin={5} className="textarea-comentarios" placeholder="Escribe tu comentario aquí" value={comentario} onChange={e => setComentario(e.target.value)} required />
 

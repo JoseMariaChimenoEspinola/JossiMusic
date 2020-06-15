@@ -41,6 +41,14 @@ def getUser(usuario,password):
 def setNewUser():
     validation = True
     check = db.find_one({"$or": [{ 'usuario': request.json['usuario'] }, { 'email':request.json['email']} ] })
+
+    foto = ""
+    
+    if request.json['urlPhoto'] == "":
+        foto = "https://firebasestorage.googleapis.com/v0/b/jossicstorage.appspot.com/o/fotosperfil%2Favatar_defecto.png?alt=media&token=8753bb2f-7093-49dc-a397-a7ddd2e94590"
+    else:
+        foto = request.json['urlPhoto']
+
     if(check == None):
         db.insert({
             'usuario': request.json['usuario'],
@@ -48,7 +56,7 @@ def setNewUser():
             'fecha': request.json['fecha'],
             'contra': request.json['contra'],
             'genero': request.json['genero'],
-            'foto': request.json['urlPhoto']
+            'foto': foto
         })
         validation = True
     else:
@@ -56,14 +64,48 @@ def setNewUser():
     
     return str(validation)
 
+#Check email user for reset password
+@app.route('/api/resetPassword/<email>', methods=['GET'])
+def resetPasswordEmail(email):
+
+    validation = True
+    checkUser = db.find_one({'email': email}, {"_id":1})
+
+    if checkUser == None:
+        validation =  False
+    else:
+        validation = True
+    
+    sys.stderr.write(str(validation))
+    
+    return str(validation)
+
 # Update data of user/artist
-@app.route('/api/updateDataUser/<id>', methods=['PUT'])
-def updateUserData(id):
+@app.route('/api/updateUserName/<id>', methods=['PUT'])
+def updateUserName(id):
     validation = True
 
     data = str(id)
 
-    db.update_one({'_id': ObjectId(data)}, {'$set': {'usuario': request.json['user'],'email': request.json['email'],'foto': request.json['urlPhoto']} })
+    db.update_one({'_id': ObjectId(data)}, {'$set': {'usuario': request.json['user']} })
+
+    return str(validation)
+
+@app.route('/api/updateEmail/<id>', methods=['PUT'])
+def updateEmail(id):
+    validation = True
+    data = str(id)
+    db.update_one({'_id': ObjectId(data)}, {'$set': {'usuario': request.json['user'],'email': request.json['email']} })
+
+    return str(validation)
+
+@app.route('/api/updatePhotoUser/<id>', methods=['PUT'])
+def updateUserPhoto(id):
+    validation = True
+
+    data = str(id)
+
+    db.update_one({'_id': ObjectId(data)}, {'$set': {'foto': request.json['urlPhoto']} })
 
     return str(validation)
 
@@ -161,7 +203,7 @@ def getArtistaBuscador(info):
 @app.route('/api/getCancionPorId/<id>', methods=['GET'])
 def getCancionPorId(id):
     data = str(id)
-    song = dbfiles.find_one({'_id': ObjectId(data)}, {'titulo': 1,'artista': 1,'genero': 1,'dircancion': 1,'dircaratula': 1,'fecha': 1,'reproducciones': 1,'likes': 1})
+    song = dbfiles.find_one({'_id': ObjectId(data)}, {'titulo': 1,'artista': 1,'genero': 1,'descripcion':1,'dircancion': 1,'dircaratula': 1,'fecha': 1,'reproducciones': 1,'likes': 1})
 
     return json.dumps(song , default=str)
 

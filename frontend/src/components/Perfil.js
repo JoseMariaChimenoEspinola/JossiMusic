@@ -237,7 +237,7 @@ function ProfileUser() {
     refreshSongs();
   }, 0);
 
-  
+
   return (
     <div id="wrapper">
       <section className="content">
@@ -245,12 +245,10 @@ function ProfileUser() {
           <div className="container-avatar-text">
             <label htmlFor="contained-button-file" className="hoverAvatar"><Avatar alt={localStorage.getItem('usuario')} id="photo-avatar" src={avatar} /></label>
             <h5>{usuario}</h5>
-            <h6>DJs</h6>
           </div>
+          <Divider className="divider-phone" />
           <div className="container-subs-counter">
             <h4>{cancionesSubidas}<br></br> Canciones</h4>
-            <h4>0<br></br> Seguidores</h4>
-            <h4>0<br></br> Seguidos</h4>
           </div>
         </div>
         <Divider />
@@ -468,7 +466,6 @@ function Configuration() {
         storage.ref("fotosperfil").child(namefile).getDownloadURL().then(url => { setUrlPhoto(url); });
       }
     );
-    console.log(urlPhoto);
   }
   function resetPhoto() {
     setPhoto('');
@@ -477,24 +474,66 @@ function Configuration() {
     setProgressCarat(0);
   }
 
-  async function handleDataUser(event) {
+  async function handlePhotoUser(event) {
     event.preventDefault();
 
     var check;
 
-    await fetch('/api/updateDataUser/' + localStorage.getItem('usuario'), {
+    await fetch('/api/updatePhotoUser/' + localStorage.getItem('usuario'), {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        urlPhoto
+      })
+    }).then(resp => resp.text()).then(data => check = data);
+
+    document.getElementById('alert-changefoto').style.display = "block";
+    setTimeout(() => { document.getElementById('alert-changefoto').style.display = 'none' }, 3000);
+
+    sendEmail(user, email);
+  }
+
+  async function handleUserName(event) {
+    event.preventDefault();
+
+    var check;
+
+    await fetch('/api/updateUserName/' + localStorage.getItem('usuario'), {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        user
+      })
+    }).then(resp => resp.text()).then(data => check = data);
+
+    document.getElementById('alert-changeusername').style.display = "block";
+    setTimeout(() => { document.getElementById('alert-changeusername').style.display = 'none' }, 3000);
+    
+
+  }
+
+  async function handleEmail(event) {
+    event.preventDefault();
+
+    var check;
+
+    await fetch('/api/updateEmail/' + localStorage.getItem('usuario'), {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         user,
-        email,
-        urlPhoto
+        email
       })
     }).then(resp => resp.text()).then(data => check = data);
 
-    document.getElementById('alert-newuser-regis').style.display = "block";
+    document.getElementById('alert-changeemail').style.display = "block";
+    setTimeout(() => { document.getElementById('alert-changeemail').style.display = 'none' }, 3000);
 
     sendEmail(user, email);
   }
@@ -507,11 +546,12 @@ function Configuration() {
       </header>
       <section className="content">
         <div className="conf-container">
-          <h1>Configuration</h1>
+          <h1>Configuración</h1>
           <div className="forms-options">
-            <form onSubmit={handleDataUser}>
-              <h5>Selecciona una nueva imagen:</h5>
 
+
+            <div className="container-form-conf">
+              <h5>Selecciona una nueva imagen:</h5>
               {photo == '' ? <Dropzone for="input-file">
                 {({ getRootProps, getInputProps, isDragActive, isDragReject }) => (
                   <div {...getRootProps({ className: "dropzone" })} className={classes.dropzone}>
@@ -530,31 +570,45 @@ function Configuration() {
                   <img src={urlPhoto} className={classes.caratulaPreview}></img>
                   {progrescarat == 100 ? <HighlightOffIcon onClick={resetPhoto} className={classes.closeIcon} /> : <CircularProgress className={classes.closeIcon} value={progrescarat} max="100" />}
                 </div>}
-
-
-              <div className={clsx(classes.container)}>
-                <Grid container spacing={1} alignItems="flex-end">
-                  <Grid item>
-                    <AccountCircle />
-                  </Grid>
-                  <Grid item>
-                    <TextField id="input-with-icon-grid" label={dataUser['usuario']} onChange={e => setUser(e.target.value)} required />
-                  </Grid>
-                </Grid>
-                <Grid container spacing={1} alignItems="flex-end">
-                  <Grid item>
-                    <MailOutlineIcon />
-                  </Grid>
-                  <Grid item>
-                    <TextField type="email" id="input-with-icon-grid" label={dataUser['email']} onChange={e => setEmail(e.target.value)} required />
-                  </Grid>
-                </Grid>
+              <Button type="submit" variant="contained" color="secondary" disabled={progrescarat == 100 ? false : true} className="button-space" onClick={handlePhotoUser}>Cambiar Foto</Button>
+              <div id="alert-changefoto">
+                <Alert severity="success">Foto Cambiada</Alert>
               </div>
-              <Button type="submit" variant="contained" color="secondary" disabled={progrescarat == 100 ? false : true}>Guardar Cambios</Button>
-              <div id="alert-newuser-regis">
-                <Alert severity="success">Modificación confirmada</Alert>
+            </div>
+
+            <div className="container-form-conf">
+              <h5>Cambiar nombre de usuario:</h5>
+              <Grid container spacing={2} alignItems="flex-end" >
+                <Grid item>
+                  <AccountCircle />
+                </Grid>
+                <Grid item>
+                  <TextField className={classes.textField} id="input-with-icon-grid" label={dataUser['usuario']} onChange={e => setUser(e.target.value)} required />
+                </Grid>
+              </Grid>
+              <Button type="submit" variant="contained" color="secondary" className="button-space-data" onClick={handleUserName}>Guardar Usuario</Button>
+              <div id="alert-changeusername">
+                <Alert severity="success">Usuario cambiado</Alert>
               </div>
-            </form>
+            </div>
+
+            <div className="container-form-conf">
+              <h5>Cambiar email de usuario:</h5>
+              <Grid container spacing={2} alignItems="flex-end">
+                <Grid item>
+                  <MailOutlineIcon />
+                </Grid>
+                <Grid item>
+                  <TextField className={classes.textField} type="email" id="input-with-icon-grid" label={dataUser['email']} onChange={e => setEmail(e.target.value)} required />
+                </Grid>
+              </Grid>
+              <Button type="submit" variant="contained" color="secondary" className="button-space-data" onClick={handleEmail}>Guardar Email</Button>
+              <div id="alert-changeemail">
+                <Alert severity="success">Email confirmado</Alert>
+              </div>
+            </div>
+            
+
           </div>
 
           <Divider />
@@ -649,7 +703,7 @@ function Configuration() {
               </div>
             </div>
 
-            <Divider className="divider-options-conf" />
+            <Divider className="divider-options-conf divider-phone-conf" />
 
             <div className="container-option-div">
               <h3>Estilo de musica</h3>

@@ -62,6 +62,14 @@ svg:hover {
 
 /*************************** Menu Header ***************************/
 
+.contraseña-olvidada:hover {
+  cursor: pointer;
+}
+
+.divider-phone {
+  display: none;
+}
+
 header {
   position: fixed;
   z-index: 99;
@@ -330,6 +338,26 @@ header {
   display: none;
 }
 
+#alert-error-reset {
+  display: none;
+}
+
+#alert-newuser-reset {
+  display: none;
+}
+
+#alert-changefoto {
+  display: none;
+}
+
+#alert-changeusername {
+  display: none;
+}
+
+#alert-changeemail {
+  display: none;
+}
+
 /************************** Content Login***********************/
 
 .estilo-inicio {
@@ -503,9 +531,9 @@ header {
 }
 
 .form-uploadfiles {
-  width: 45%; 
-  display: flex; 
-  align-items: unsafe; 
+  width: 45%;
+  display: flex;
+  align-items: unsafe;
   flex-direction: column;
 }
 
@@ -516,6 +544,12 @@ header {
   margin: 30px auto;
   display: flex;
   justify-content: space-around;
+  flex-direction: column;
+  text-align: center;
+}
+
+.container-subs-counter {
+  margin-top: 20px;
 }
 
 .hideInput {
@@ -547,6 +581,17 @@ header {
 }
 
 /**************************Configuracion***********************/
+
+.container-form-conf {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+}
+
+.button-space {
+  margin-bottom: 10px !important;
+  margin-bottom: 10px !important;
+}
 
 .img-config-old-profile {
   width: 150px;
@@ -672,13 +717,8 @@ header {
 .titulo-cancion-detalles {
   font-weight: bold;
   font-style: italic;
-}
-
-.like-button {
-  margin-top: 10px !important;
-  border-radius: 100% !important;
-  width: 60px !important;
-  height: 60px !important;
+  margin-top: 10px;
+  text-decoration: underline;
 }
 
 .container-comentarios {
@@ -725,9 +765,8 @@ header {
   bottom: 0px;
   height: 80px;
   width: 100%;
-  background-color: black;
-  color: white;
-  border: 1px solid silver;
+  background-color: white;
+  color: black;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -770,7 +809,7 @@ header {
 
 .remove-song-reproductor {
   transition: 0.3s all;
-  color: white !important;
+  color: black !important;
 }
 
 .remove-song-reproductor:hover {
@@ -875,7 +914,6 @@ footer {
 @media only screen and (max-width: 1024px) {
   /*************************** Home ***************************/
   /*Menu*/
-  
   .mobile-display-register {
     display: none !important;
   }
@@ -905,6 +943,9 @@ footer {
     font-size: 3em;
   }
   /*content*/
+  .divider-phone {
+    display: block;
+  }
   .info-plataforma {
     flex-direction: column;
   }
@@ -936,6 +977,18 @@ footer {
     width: 100%;
     margin: auto;
   }
+  .estilo-inicio {
+    width: 100%;
+  }
+  #songs-style-home {
+    width: 95% !important;
+    display: flex;
+    margin: auto;
+    height: 270px !important;
+  }
+  .titulo-cancion-detalles {
+    margin-top: 20px;
+  }
   /****************** UploadFiles ********************/
   .mobile-first-uploadfile {
     top: 130px !important;
@@ -953,6 +1006,82 @@ footer {
   }
   .form-uploadfiles {
     width: 100% !important;
+  }
+  .caratula-preview-reproductor {
+    width: 70px;
+    margin-right: 20px;
+  }
+  /****************** Reproductor ********************/
+  .reproductor-div-static {
+    flex-direction: row;
+    border-top: 0.5px solid black;
+  }
+  .data-song-rep {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .titulo-reproductor {
+    font-weight: bold;
+    font-style: italic;
+  }
+  .artista-reproductor {
+    font-weight: bold;
+    font-style: italic;
+  }
+  .caratula-preview-reproductor {
+    margin-left: 10px;
+  }
+  .caratula-preview-reproductor:hover {
+    cursor: pointer;
+  }
+  .titulo-reproductor {
+    display: none;
+  }
+  .remove-song-reproductor {
+    display: none;
+  }
+  .genero-reproductor {
+    display: none;
+  }
+  .artista-reproductor {
+    display: none;
+  }
+  /****************** Perfil ********************/
+  .song-style-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  /*****************Configuracion*****************/
+  .forms-options {
+    padding: 10px;
+  }
+  .container-options {
+    flex-direction: column;
+  }
+  .divider-phone-conf {
+    padding-bottom: 1px !important;
+  }
+  .container-option-div {
+    width: 100%;
+  }
+  /*****************Perifl externo*****************/
+  .profile-style-container {
+    width: 100%;
+  }
+  /*****************Comentarios*****************/
+  .comment-listitem {
+    display: flex;
+    flex-direction: column;
+  }
+  .text-aling-mobile {
+    word-wrap: break-word;
+    width: 300px;
+    text-align: justify;
+  }
+  /****************** Footer ********************/
+  .footer-style {
+    flex-direction: column;
   }
 }
 

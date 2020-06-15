@@ -61,15 +61,16 @@ const useStyles = makeStyles((theme) => ({
     },
     title: {
         display: 'none',
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up('lg')]: {
             display: 'block',
         },
     },
     titleMobile: {
-        [theme.breakpoints.down('sm')]: {
+        display: 'none',
+        [theme.breakpoints.down('md')]: {
             display: 'block',
-            width: "80px",
-            height: "50px"
+            width: "30px",
+            height: "30px"
         },
     },
     search: {
@@ -266,8 +267,6 @@ function MenuHeaderLoginSearch() {
             document.getElementById('buscador').setAttribute("class", "style-searcher-content-selected");
             document.getElementById('form-buscador').style.display = "block";
 
-
-
             /* Oculta las diferentes opciones del buscador progresivamente, de tal manera que cuando el usuario escriba algo,
              muestre unicamente lo que se encuentre, si no hay canciones con estos resultados, el especio desaparecera */
             if (canciones.length != 0) {
@@ -286,13 +285,7 @@ function MenuHeaderLoginSearch() {
                         songs += '<a href="/cancion?song=' + canciones[i]._id + '"><Button class="button-songs">Ver Mas</Button></a>';
                         songs += '</div>';
 
-
                         document.getElementById('canciones').innerHTML = songs;
-
-                        (function (i) {
-                            var id = canciones[i]._id;
-                            document.getElementById('link-song-' + i).onclick = function () { Start(id) };
-                        })(i);
 
                     }
                     for (var i = 0; i < canciones.length; i++) {
@@ -319,6 +312,7 @@ function MenuHeaderLoginSearch() {
                         artists += '<div class="div-contenedor-resultados">';
                         artists += '<img class="foto-contenedor-resultados" src="' + artistas[i].foto + '"></img>';
                         artists += '<p><span>' + artistas[i].usuario + '<span></p>';
+                        artists += '<a href="/perfilext?artist=' + artistas[i]._id + '"><Button class="button-songs">Ver Mas</Button></a>';
                         artists += '</div>';
                         document.getElementById('artistas').innerHTML = artists;
                     }
@@ -355,7 +349,8 @@ function MenuHeaderLoginSearch() {
                     <Typography className={classes.title} variant="h6" noWrap>
                         <NavLink to="/"><img src={logo} className="logo-menu" /></NavLink>
                     </Typography>
-                    <NavLink to="/" className={classes.titleMobile}><img height="30" src="https://firebasestorage.googleapis.com/v0/b/jossicstorage.appspot.com/o/icon.png?alt=media&token=708d784a-3308-4b35-bcbd-16cbdf351179" className="logo-menu" /></NavLink>
+                    <NavLink to="/"><img className={classes.titleMobile} src="https://firebasestorage.googleapis.com/v0/b/jossicstorage.appspot.com/o/icon.png?alt=media&token=708d784a-3308-4b35-bcbd-16cbdf351179" /></NavLink>
+
                     <div className={classes.search}>
                         <div className={classes.searchIcon}>
                             <SearchIcon />

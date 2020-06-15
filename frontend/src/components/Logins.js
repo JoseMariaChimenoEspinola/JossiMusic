@@ -207,6 +207,7 @@ function LoginForm() {
                     }
                 />
                 <Button variant="contained" color="primary" onClick={checkUserApi}>Iniciar sesión</Button>
+
                 <div id="alert-error-login">
                     <Alert severity="error">El usuario o la contraseña no son correctos</Alert>
                 </div>
@@ -246,8 +247,9 @@ function RegistroForm() {
                 storage.ref("fotosperfil").child(namefile).getDownloadURL().then(url => { setUrlPhoto(url); });
             }
         );
-        console.log(urlPhoto);
+        
     }
+
     function resetPhoto() {
         setPhoto('');
         var namefile = String(photo.name);
@@ -267,7 +269,8 @@ function RegistroForm() {
     async function RegistrarApi(e) {
         e.preventDefault();
 
-        var check;
+        var check;   
+    
 
         const res = await fetch('/api/register', {
             method: 'POST',
@@ -290,9 +293,10 @@ function RegistroForm() {
         } else {
             document.getElementById('alert-newuser-regis').style.display = "block";
             document.getElementById('alert-error-regis').style.display = "none";
+            //envia el correo electronico de nueva cuenta
+            sendEmail(usuario, email);
         }
-        console.log(check);
-        sendEmail(usuario, email);
+        
     }
 
     const handleClickShowPassword = () => {
@@ -386,12 +390,67 @@ function RegistroForm() {
                         <MenuItem value={"House"}>House</MenuItem>
                     </Select>
                 </FormControl>
-                <Button type="submit" variant="contained" color="secondary" disabled={progrescarat == 100 ? false : true}>Registrar</Button>
+                <Button type="submit" variant="contained" color="secondary">Registrar</Button>
                 <div id="alert-error-regis">
                     <Alert severity="error">Esta cuenta ya existe</Alert>
                 </div>
                 <div id="alert-newuser-regis">
                     <Alert severity="success">Registro completado</Alert>
+                </div>
+            </form>
+        </div>
+    );
+}
+
+
+
+function ResetContarseña() {
+    const classes = useStyles();
+
+    
+    const [email, setEmail] = useState('');
+    var check;
+
+    async function RegistrarApi(e) {
+        e.preventDefault();
+
+        await fetch('/api/resetPassword/' + email, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(resp => resp.text()).then(data => check = data);
+        console.log(check);
+        if (check != 'True') {
+            document.getElementById('alert-error-reset').style.display = "block";
+            document.getElementById('alert-newuser-reset').style.display = "none";
+        } else {
+            document.getElementById('alert-newuser-reset').style.display = "block";
+            document.getElementById('alert-error-reset').style.display = "none";
+        }
+
+    }
+
+
+    return (
+        <div className={classes.margin}>
+            <form onSubmit={RegistrarApi} className={classes.margin}>
+                <div className={clsx(classes.container)}>
+                    <Grid container spacing={1} alignItems="flex-end">
+                        <Grid item>
+                            <MailOutlineIcon />
+                        </Grid>
+                        <Grid item>
+                            <TextField type="email" id="input-with-icon-grid" label="Correo Electronico" onChange={e => setEmail(e.target.value)} />
+                        </Grid>
+                    </Grid>
+                </div>
+                <Button type="submit" variant="contained" color="secondary" >Enviar Petición</Button>
+                <div id="alert-error-reset">
+                    <Alert severity="error">Esta cuenta no existe</Alert>
+                </div>
+                <div id="alert-newuser-reset">
+                    <Alert severity="success">Se ha enviado tu petición</Alert>
                 </div>
             </form>
         </div>
@@ -413,4 +472,5 @@ function sendEmail(usuario, email) {
 }
 
 
-export { LoginForm, RegistroForm };
+
+export { LoginForm, RegistroForm, ResetContarseña };
