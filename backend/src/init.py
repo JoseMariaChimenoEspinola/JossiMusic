@@ -27,10 +27,8 @@ dbfiles = mongo.db.songs
 def index():
     return app.send_static_file('index.html')
 
-
-
-# Api Calls
-## User Calls
+# Llamadas de Api
+# Login y Registro
 @app.route('/api/login/<usuario>/<password>', methods=['GET'])
 def getUser(usuario,password):
 
@@ -64,7 +62,7 @@ def setNewUser():
     
     return str(validation)
 
-#Check email user for reset password
+#Comprovar correo electronico para reestablecer contraseña
 @app.route('/api/resetPassword/<email>', methods=['GET'])
 def resetPasswordEmail(email):
 
@@ -80,7 +78,58 @@ def resetPasswordEmail(email):
     
     return str(validation)
 
-# Update data of user/artist
+# Inicio
+## Obtener canciones dependiendo del estilo musical
+@app.route('/api/getMusicStyleHome/<genero>', methods=['GET'])
+def getHomeStyleSongs(genero):
+
+    songs = []
+    search = dbfiles.find({'genero': genero})
+
+    for doc in search:
+        songs.append({
+            '_id': str(ObjectId(doc['_id'])),
+            'titulo': doc['titulo'],
+            'artista': doc['artista'],
+            'genero': doc['genero'],
+            'dircancion': doc['dircancion'],
+            'dircaratula': doc['dircaratula'],
+            'fecha': doc['fecha'],
+            'reproducciones': doc['reproducciones'],
+            'likes': doc['likes']
+            })  
+
+    return json.dumps(songs , default=str)
+
+## Obtener artistas dependiendo del estilo musical
+@app.route('/api/getArtistsStyleHome/<genero>', methods=['GET'])
+def getHomeStyleArtists(genero):
+
+    songs = []
+    search = db.find({'genero': genero})
+    for doc in search:
+        songs.append({
+            '_id': str(ObjectId(doc['_id'])),
+            'usuario': doc['usuario'],
+            'genero': doc['genero'],
+            'foto': doc['foto']
+            })  
+
+    return jsonify(songs)
+
+## Comprovar estilo musical
+@app.route('/api/checkStyleMusic/<usuario>', methods=['GET'])
+def checkGen(usuario):
+    id = str(usuario)
+    gen = db.find_one({'_id':ObjectId(id)}, {"_id":0,"genero":1})
+    
+    sys.stderr.write(str(gen))
+
+    return jsonify(gen)
+
+
+#Configuracion del usuario
+##Modificación de los datos personales del usuario
 @app.route('/api/updateUserName/<id>', methods=['PUT'])
 def updateUserName(id):
     validation = True
@@ -109,7 +158,50 @@ def updateUserPhoto(id):
 
     return str(validation)
 
-# Get avatar by user
+## Comprovar la contraseña del usuario en linea
+@app.route('/api/checkOldPassoword/<usuario>/<password>', methods=['GET'])
+def checkPassword(usuario, password):
+    id = str(usuario)
+    validation = True
+    checkUser = db.find_one({'_id': ObjectId(id), 'contra': password})
+
+    if checkUser == None:
+        validation =  False
+    else:
+        validation = True
+    print(validation)
+    return str(validation)
+
+## Cambio de contraseña
+@app.route('/api/changePassword/<usuario>', methods=['PUT'])
+def changePassword(usuario):
+    id = str(usuario)
+
+    db.update_one({'_id': ObjectId(id)}, {'$set': {"contra": request.json['newPassword2']}})
+
+    return 'ok'
+
+
+## Actualizar estilo musical
+@app.route('/api/changeStyle/', methods=['PUT'])
+def uploadGen():
+    validation = True
+    
+    if request.json['genero'] != '':
+        id = str(request.json['usuario'])
+        db.update_one({'_id': ObjectId(id)},{'$set': {"genero": request.json['genero']}})
+        validation = True
+    else:
+        validation = False
+
+    sys.stderr.write(str(validation))
+
+    return str(validation)
+
+
+
+# Obtención de imagenes y datos de usuario
+## Obtener datos del usuario
 @app.route('/api/getDataUser/<id>', methods=['GET'])
 def getDataUser(id):
     
@@ -118,25 +210,27 @@ def getDataUser(id):
     gen = db.find_one({'_id': ObjectId(data)}, {"_id": 0, 'usuario':1, "foto": 1, "fecha": 1, "email":1})
     return jsonify(gen)
 
-# Get caratula by id
+## Obtener la caratula de la cancion
 @app.route('/api/getCaratulaPhoto/<id>', methods=['GET'])
 def getCaratulaPhoto(id):
     data = str(id)
     gen = dbfiles.find_one({'_id': ObjectId(data)}, {"_id": 0, "dircaratula": 1})
     return jsonify(gen)
 
-# Get avatar by id
+## Obtener la foto del usuario por id
 @app.route('/api/getPerfilPhoto/<id>', methods=['GET'])
 def getPerfilPhoto(id):
     data = str(id)
     gen = db.find_one({'_id': ObjectId(data)}, {"_id": 0, "foto": 1})
     return jsonify(gen)
 
-# Upload songs and files
+
+# Canciones
+## Subir canciones
 @app.route('/api/uploadsong', methods=['POST'])
 def uploadSong():
-    sys.stderr.write('Fecha de hoy: '+str(time.strftime("%d/%m/%y")))
-    id = dbfiles.insert({
+
+    dbfiles.insert({
         'titulo': request.json['titulo'],
         'descripcion': request.json['descripcion'],
         'artista': ObjectId(request.json['artista']),
@@ -150,7 +244,7 @@ def uploadSong():
     
     return 'ok'
 
-#eliminar cancion por id
+## Eliminar canciones del usuario
 @app.route('/api/deleteSong/<id>', methods=['GET'])
 def deleteSong(id):
 
@@ -160,46 +254,7 @@ def deleteSong(id):
 
     return 'ok'
 
-# Buscador de contenido de canciones
-@app.route('/api/getCancionBuscador/<info>', methods=['GET'])
-def getCancionBuscador(info):
-
-    songs = []
-    search = dbfiles.find({'titulo': {"$regex": '^'+info, '$options': 'i'}})
-
-    for doc in search:
-        artista = db.find_one( {"_id":ObjectId(str(doc['artista']))} , {"usuario":1} )
-        songs.append({
-            '_id': str(ObjectId(doc['_id'])),
-            'titulo': doc['titulo'],
-            'artista': artista['usuario'],
-            'genero': doc['genero'],
-            'dircancion': doc['dircancion'],
-            'dircaratula': doc['dircaratula'],
-            'fecha': doc['fecha'],
-            'reproducciones': doc['reproducciones'],
-            'likes': doc['likes']
-        })
-
-    return json.dumps(songs , default=str)
-
-# Buscador de contenido de artistas
-@app.route('/api/getArtistaBuscador/<info>', methods=['GET'])
-def getArtistaBuscador(info):
-
-    arts = []
-    search = db.find({'usuario': {"$regex": '^'+info, '$options': 'i'}})
-
-    for doc in search:
-        arts.append({
-            '_id': str(ObjectId(doc['_id'])),
-            'usuario': doc['usuario'],
-            'foto': doc['foto']
-        })
-
-    return jsonify(arts)
-
-# OBTENER CANCION PO ID
+## Obtener canción por id
 @app.route('/api/getCancionPorId/<id>', methods=['GET'])
 def getCancionPorId(id):
     data = str(id)
@@ -207,17 +262,18 @@ def getCancionPorId(id):
 
     return json.dumps(song , default=str)
 
-#Obtener comentarios para cada cancion
-@app.route('/api/getCommentsSongs/<song>', methods=['GET'])
-def getCommentsSong(song):
+# OBTENER ARTISTA POR ID
+@app.route('/api/getArtistaPorId/<id>', methods=['GET'])
+def getArtistaPorId(id):
+    data = str(id)
+    song = db.find_one({'_id': ObjectId(data)}, {'usuario': 1,'email': 1,'fecha': 1,'genero': 1})
 
-    id = str(song)
-    comments = dbfiles.find({'_id': ObjectId(id)}, {"_id":0,"comentarios":1})
-    sys.stderr.write(str(comments))
+    return json.dumps(song , default=str)
 
-    return json.dumps(list(comments) , default=str)
 
-#Crear comentario
+
+# Comentarios
+## Crear comentario
 @app.route('/api/crearComentario/<id>/<numCom>', methods=['PUT'])
 def createComment(id, numCom):
 
@@ -233,18 +289,17 @@ def createComment(id, numCom):
 
     return getCommentsSong(data)
 
+## Obtener comentarios para cada cancion
+@app.route('/api/getCommentsSongs/<song>', methods=['GET'])
+def getCommentsSong(song):
 
+    id = str(song)
+    comments = dbfiles.find({'_id': ObjectId(id)}, {"_id":0,"comentarios":1})
+    sys.stderr.write(str(comments))
 
-# OBTENER ARTISTA POR ID
-@app.route('/api/getArtistaPorId/<id>', methods=['GET'])
-def getArtistaPorId(id):
-    data = str(id)
-    song = db.find_one({'_id': ObjectId(data)}, {'usuario': 1,'email': 1,'fecha': 1,'genero': 1})
+    return json.dumps(list(comments) , default=str)
 
-    return json.dumps(song , default=str)
-
-
-#get music users
+## Obtener canciones de un usuario
 @app.route('/api/getMusic/<artista>', methods=['GET'])
 def getUserSong(artista):
     
@@ -270,95 +325,60 @@ def getUserSong(artista):
     sys.stderr.write(str(songs))
     return json.dumps(songs , default=str)
 
-#get music stylemusic on homepage
-@app.route('/api/getMusicStyleHome/<genero>', methods=['GET'])
-def getHomeStyleSongs(genero):
+
+
+# Buscador
+## Obtener canciones del buscador
+@app.route('/api/getCancionBuscador/<info>', methods=['GET'])
+def getCancionBuscador(info):
 
     songs = []
-    search = dbfiles.find({'genero': genero})
+    search = dbfiles.find({'titulo': {"$regex": '^'+info, '$options': 'i'}})
 
     for doc in search:
+        artista = db.find_one( {"_id":ObjectId(str(doc['artista']))} , {"usuario":1} )
         songs.append({
             '_id': str(ObjectId(doc['_id'])),
             'titulo': doc['titulo'],
-            'artista': doc['artista'],
+            'artista': artista['usuario'],
             'genero': doc['genero'],
             'dircancion': doc['dircancion'],
             'dircaratula': doc['dircaratula'],
             'fecha': doc['fecha'],
             'reproducciones': doc['reproducciones'],
             'likes': doc['likes']
-            })  
+        })
 
     return json.dumps(songs , default=str)
 
-#get artist stylemusic on homepage
-@app.route('/api/getArtistsStyleHome/<genero>', methods=['GET'])
-def getHomeStyleArtists(genero):
+## Buscador de artistas
+@app.route('/api/getArtistaBuscador/<info>', methods=['GET'])
+def getArtistaBuscador(info):
 
-    songs = []
-    search = db.find({'genero': genero})
+    arts = []
+    search = db.find({'usuario': {"$regex": '^'+info, '$options': 'i'}})
+
     for doc in search:
-        songs.append({
+        arts.append({
             '_id': str(ObjectId(doc['_id'])),
             'usuario': doc['usuario'],
-            'genero': doc['genero'],
             'foto': doc['foto']
-            })  
+        })
 
-    return jsonify(songs)
-
-# Change Password from configuration
-@app.route('/api/checkOldPassoword/<usuario>/<password>', methods=['GET'])
-def checkPassword(usuario, password):
-    id = str(usuario)
-    validation = True
-    checkUser = db.find_one({'_id': ObjectId(id), 'contra': password})
-
-    if checkUser == None:
-        validation =  False
-    else:
-        validation = True
-    print(validation)
-    return str(validation)
+    return jsonify(arts)
 
 
-@app.route('/api/changePassword/<usuario>', methods=['PUT'])
-def changePassword(usuario):
-    id = str(usuario)
-
-    db.update_one({'_id': ObjectId(id)}, {'$set': {"contra": request.json['newPassword2']}})
-
-    return 'ok'
 
 
-#Update style music conf
 
 
-@app.route('/api/changeStyle/', methods=['PUT'])
-def uploadGen():
-    validation = True
-    
-    if request.json['genero'] != '':
-        id = str(request.json['usuario'])
-        db.update_one({'_id': ObjectId(id)},{'$set': {"genero": request.json['genero']}})
-        validation = True
-    else:
-        validation = False
-
-    sys.stderr.write(str(validation))
-
-    return str(validation)
 
 
-@app.route('/api/checkStyleMusic/<usuario>', methods=['GET'])
-def checkGen(usuario):
-    id = str(usuario)
-    gen = db.find_one({'_id':ObjectId(id)}, {"_id":0,"genero":1})
-    
-    sys.stderr.write(str(gen))
 
-    return jsonify(gen)
+
+
+
+
 
 
 

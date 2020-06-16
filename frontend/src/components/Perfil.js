@@ -699,7 +699,6 @@ function Configuration() {
                     <Alert severity="error">La contraseña antigua no es correcta</Alert>
                   </div>
                 </form>
-                <RulesChange />
               </div>
             </div>
 
@@ -739,54 +738,6 @@ function Configuration() {
 
 }
 
-
-
-
-// Politica de contraseñas
-
-function RulesChange() {
-  const [open, setOpen] = React.useState(false);
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  return (
-    <div>
-      <Button variant="outlined" onClick={handleClickOpen} style={{ width: "90%", borderRadius: "15px", margin: "10px" }}>Politica de contraseñas</Button>
-      <Dialog
-        fullScreen={fullScreen}
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="responsive-dialog-title"
-      >
-        <DialogTitle id="responsive-dialog-title">{"Politica de contraseña de documentos"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            La contraseña introducida debe de cumplir los siguientes requisitos:
-            </DialogContentText>
-          <ul style={{ textAlign: "center", listStyle: "none" }}>
-            <li>Longitud minima de 8 caracteres a 12 maximo</li>
-            <li>Una letra Mayuscula</li>
-            <li>Una letra minuscula</li>
-            <li>Un carater especial  (!@#$%^*_=+-&)</li>
-          </ul>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary" autoFocus style={{ width: "100%" }}>
-            Cerrar
-            </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  );
-}
 
 /* correo electronico */
 function sendEmail(user, email) {

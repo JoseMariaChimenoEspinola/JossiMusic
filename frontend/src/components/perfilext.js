@@ -37,9 +37,16 @@ import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 /* Reproductor */
 import Start from './reproductor';
 
+/* Canciones */
 import GridList from '@material-ui/core/GridList';
 
+/* Backdrop */
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 function ProfileUser() {
+  //backdrop
+  const [open, setOpen] = React.useState(true);
   //Get id from url
   var [artista, setArtista] = useState("");
   var url = new URLSearchParams(window.location.search);
@@ -124,29 +131,34 @@ function ProfileUser() {
   }, 0);
 
   return (
-    <div id="wrapper">
-      <section className="content">
-        <div className="song-style-container">
-          <div className="container-avatar-text">
-            <label htmlFor="contained-button-file" className="hoverAvatar"><Avatar alt={localStorage.getItem('usuario')} id="photo-avatar" src={caratula} /></label>
+    <div>
+      <Backdrop open={open} className="backdrop">
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <div id="wrapper">
+        <section className="content">
+          <div className="song-style-container">
+            <div className="container-avatar-text">
+              <label htmlFor="contained-button-file" className="hoverAvatar"><Avatar alt={localStorage.getItem('usuario')} id="photo-avatar" src={caratula} /></label>
+            </div>
+            <Divider className="divider-options-song divider-phone-conf" />
+            <div>
+              <h1 className="titulo-cancion-detalles">{usuario}</h1>
+              <h3>{genero}</h3>
+              <h5>{fecha}</h5>
+              <h5>{email}</h5>
+              <h5>{cancionesSubidas} canciones</h5>
+            </div>
           </div>
-          <Divider className="divider-options-song divider-phone-conf" />
-          <div>
-            <h1 className="titulo-cancion-detalles">{usuario}</h1>
-            <h3>{genero}</h3>
-            <h5>{fecha}</h5>
-            <h5>{email}</h5>
-            <h5>{cancionesSubidas} canciones</h5>
+          <Divider />
+          <div className="profile-style-container">
+            <h1>Novedades</h1>
           </div>
-        </div>
-        <Divider />
-        <div className="profile-style-container">
-          <h1>Novedades</h1>
-        </div>
-        <GridList cols={2.5}>
-          <div id="songs-container-author"></div>
-        </GridList>
-      </section>
+          <GridList cols={2.5}>
+            <div id="songs-container-author"></div>
+          </GridList>
+        </section>
+      </div>
     </div>
   );
 
