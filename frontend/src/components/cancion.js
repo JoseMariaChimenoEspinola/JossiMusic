@@ -158,10 +158,11 @@ function ProfileUser() {
         return true;
       }).catch(() => { return false; });
 
-      console.log(comments);
 
     });
 
+    setComentario('');
+    setRanking(0);
   }
 
   /* Actualizar comentarios y mostrar */

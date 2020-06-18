@@ -130,6 +130,10 @@ function ProfileUser() {
     }, 1100)
   }, 0);
 
+  setTimeout(() => {
+    setOpen(false);
+  }, 800);
+
   return (
     <div>
       <Backdrop open={open} className="backdrop">

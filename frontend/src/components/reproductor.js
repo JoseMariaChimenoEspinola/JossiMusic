@@ -12,7 +12,6 @@ function Start(id) {
 
     fetch('/api/getCancionPorId/' + id).then(resp => resp.json()).then(data => {
         list.push(data);
-        console.log(data);
         
         fetch('/api/getDataUser/' + data['artista'], {
             method: 'GET',
@@ -26,9 +25,6 @@ function Start(id) {
         songID = data['_id'];
     });
 
-
-
-    console.log(artista);
     setTimeout(() => {
 
         setTimeout(() => {

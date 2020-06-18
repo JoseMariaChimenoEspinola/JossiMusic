@@ -189,7 +189,7 @@ function MenuHeaderLoginSearch() {
         >
             <NavLink className="link-menu-extra-options" to={"/perfil"}><MenuItem onClick={handleMenuClose}>Perfil, {usuario}</MenuItem></NavLink>
             <NavLink className="link-menu-extra-options" to={"/configuration"}><MenuItem onClick={handleMenuClose}>Configuracion de cuenta</MenuItem></NavLink>
-            <NavLink className="link-menu-extra-options" to="/" onClick={() => { localStorage.clear(); }}><MenuItem>Cerrar sesión</MenuItem></NavLink>
+            <NavLink className="link-menu-extra-options" to="/" onClick={() => { localStorage.clear(); window.location.reload(false);}}><MenuItem>Cerrar sesión</MenuItem></NavLink>
         </Menu>
 
     );

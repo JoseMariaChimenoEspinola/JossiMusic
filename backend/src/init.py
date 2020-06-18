@@ -24,6 +24,10 @@ dbfiles = mongo.db.songs
 @app.route('/')
 @app.route('/cancion')
 @app.route('/perfilext')
+@app.route('/perfil')
+@app.route('/configuration')
+@app.route('/politicadeprivacidad')
+@app.route('/uploadcontent')
 def index():
     return app.send_static_file('index.html')
 
@@ -94,9 +98,7 @@ def getHomeStyleSongs(genero):
             'genero': doc['genero'],
             'dircancion': doc['dircancion'],
             'dircaratula': doc['dircaratula'],
-            'fecha': doc['fecha'],
-            'reproducciones': doc['reproducciones'],
-            'likes': doc['likes']
+            'fecha': doc['fecha']
             })  
 
     return json.dumps(songs , default=str)
@@ -237,9 +239,7 @@ def uploadSong():
         'genero': request.json['genero'],
         'dircancion': request.json['urlsong'],
         'dircaratula': request.json['urlCaratula'],
-        'fecha': time.strftime("%d/%m/%y"),
-        'reproducciones': 0,
-        'likes': 0
+        'fecha': time.strftime("%d/%m/%y")
     })
     
     return 'ok'
@@ -258,7 +258,7 @@ def deleteSong(id):
 @app.route('/api/getCancionPorId/<id>', methods=['GET'])
 def getCancionPorId(id):
     data = str(id)
-    song = dbfiles.find_one({'_id': ObjectId(data)}, {'titulo': 1,'artista': 1,'genero': 1,'descripcion':1,'dircancion': 1,'dircaratula': 1,'fecha': 1,'reproducciones': 1,'likes': 1})
+    song = dbfiles.find_one({'_id': ObjectId(data)}, {'titulo': 1,'artista': 1,'genero': 1,'descripcion':1,'dircancion': 1,'dircaratula': 1,'fecha': 1})
 
     return json.dumps(song , default=str)
 
@@ -317,9 +317,7 @@ def getUserSong(artista):
             'genero': doc['genero'],
             'dircancion': doc['dircancion'],
             'dircaratula': doc['dircaratula'],
-            'fecha': doc['fecha'],
-            'reproducciones': doc['reproducciones'],
-            'likes': doc['likes']
+            'fecha': doc['fecha']
             })  
 
     sys.stderr.write(str(songs))
@@ -344,9 +342,7 @@ def getCancionBuscador(info):
             'genero': doc['genero'],
             'dircancion': doc['dircancion'],
             'dircaratula': doc['dircaratula'],
-            'fecha': doc['fecha'],
-            'reproducciones': doc['reproducciones'],
-            'likes': doc['likes']
+            'fecha': doc['fecha']
         })
 
     return json.dumps(songs , default=str)

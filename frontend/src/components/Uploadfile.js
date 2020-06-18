@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     },
     selector: {
         margin: theme.spacing(1),
-        minWidth: 220,
+        minWidth: 220, 
     },
     selectEmpty: {
         marginTop: theme.spacing(2),
@@ -129,7 +129,6 @@ export default function FormUploader() {
         var namefile = String(file.name);
         var typefile = String(file.type);
         var blob = new Blob([file], { type: typefile });//convierto el archivo a un blob con el tipo de archivo dinamicamente.
-        console.log(blob);
 
         const uploadCarat = storage.ref(`caratulas/${namefile}`).put(blob);
         uploadCarat.on(
@@ -147,7 +146,7 @@ export default function FormUploader() {
                 storage.ref("caratulas").child(namefile).getDownloadURL().then(url => { setUrlCarat(url); });
             }
         );
-        console.log(urlCaratula);
+        
     }
     function resetPhoto() {
         setPhoto('');
@@ -178,7 +177,6 @@ export default function FormUploader() {
                 artista
             })
         })
-        console.log(res);
         setTitulo('');
         setDesc('');
         setGen('');

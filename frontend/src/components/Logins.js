@@ -420,7 +420,7 @@ function ResetContarseña() {
                 'Content-Type': 'application/json'
             },
         }).then(resp => resp.text()).then(data => check = data);
-        console.log(check);
+
         if (check != 'True') {
             document.getElementById('alert-error-reset').style.display = "block";
             document.getElementById('alert-newuser-reset').style.display = "none";
